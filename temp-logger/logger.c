@@ -33,6 +33,9 @@ uint8_t systemState;
 #define CMD_READ_STATE 3
 #define CMD_READ_DATA 4
 
+// Lihao
+const int __CPROVER_thread_priorities[] = {5, 2};
+const char* __CPROVER_threads[] = {"c::task_communicate", "c::task_measure"};
 
 void stop(void)
 {
@@ -121,6 +124,14 @@ void initialize(void) {
 
 void run(void)
 {
+  // Lihao
+  __CPROVER_ASYNC_1: 
+  task_communicate();
+
+  __CPROVER_ASYNC_1: 
+  task_measure();
+
+/*
   while(1) {
     uint8_t currentTask;
     switch(currentTask) {
@@ -133,6 +144,7 @@ void run(void)
       default: break;
     }
   }
+*/
 }
 
 void main() {
