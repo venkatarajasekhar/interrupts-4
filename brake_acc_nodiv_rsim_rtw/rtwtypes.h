@@ -18,11 +18,11 @@
 
 #ifndef __RTWTYPES_H__
 #define __RTWTYPES_H__
-#include "tmwtypes.h"
-
+//#include "tmwtypes.h" 
+// Lihao
 /* This ID is used to detect inclusion of an incompatible rtwtypes.h */
 #define RTWTYPES_ID_C08S16I32L64N64F1
-#include "simstruc_types.h"
+//#include "simstruc_types.h"
 #ifndef POINTER_T
 # define POINTER_T
 
@@ -46,7 +46,16 @@ typedef void * pointer_T;
 #define INT64_T
 
 typedef long int64_T;
-
+// Lihao
+typedef double real_T;
+typedef float real32_T;
+typedef int boolean_T;
+typedef int int32_T;
+typedef unsigned uint32_T;
+typedef int int_T;
+typedef unsigned uint_T;
+typedef unsigned char uint8_T;
+typedef char char_T;
 #endif
 
 #ifndef UINT64_T
