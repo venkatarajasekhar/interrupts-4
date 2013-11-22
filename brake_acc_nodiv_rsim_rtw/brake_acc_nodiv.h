@@ -474,8 +474,39 @@ extern const int_T gblInportComplex[];
 extern const int_T gblInportInterpoFlag[];
 extern const int_T gblInportContinuous[];
 
-#define ceil(x) __builtin_ceilf(x)
-#define floor(x) __builtin_floorf(x)
-#define fmod(x,y) __builtin_fmodf(x,y)
+real_T ceil(real_T x) { //assume realT = float !!!
+  real_T y = (real_T)(int_T)x;
+  if(y==x) return x;
+  else 
+    if(x>=0f) return y+1f;
+    else return y;
+}
+
+real_T floor(real_T x) { //assume realT = float !!!
+  real_T y = (real_T)(int_T)x;
+  if(y==x) return x;
+  else 
+    if(x>=0f) return y;
+    else return y-1f;
+}
+
+real_T fmod(real_T x, real_T y) { //assume realT = float !!!
+  if(isnan(x) || isnan(y) || isinf(x) || (y==0f)) return NAN;
+  if(y<0f) y = -y;
+  if(x>0f) {
+    unsigned n;
+    x = x-n*y;
+    __CPROVER_assume(x<y && x>=0f);
+    return x;
+  }
+  else if (x<0f) {
+    unsigned n;
+    x = x+n*y;
+    __CPROVER_assume(x>-y && x<=0f);
+    return x;
+  }
+  //else x==0 
+  return x;
+}
 
 #endif                                 /* RTW_HEADER_brake_acc_nodiv_h_ */
