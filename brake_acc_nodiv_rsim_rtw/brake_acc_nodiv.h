@@ -25,11 +25,12 @@
 #include <float.h>
 #include <string.h>
 #include "rtwtypes.h"
-#include "simstruc.h"
-#include "fixedpoint.h"
-#include "rsim.h"
-#include "rt_logging.h"
-#include "dt_info.h"
+// Lihao
+//#include "simstruc.h" 
+//#include "fixedpoint.h"
+//#include "rsim.h"
+//#include "rt_logging.h"
+//#include "dt_info.h"
 #include "rt_nonfinite.h"
 #include "rtGetInf.h"
 #include "rtGetNaN.h"
@@ -393,7 +394,7 @@ extern BlockIO rtB;                    /* block i/o */
 extern D_Work rtDWork;                 /* states (dwork) */
 
 /* Simulation Structure */
-extern SimStruct *const rtS;
+//extern SimStruct *const rtS; // Lihao
 
 /*-
  * The generated code includes comments that allow you to trace directly
@@ -463,7 +464,7 @@ extern SimStruct *const rtS;
 extern const int_T gblNumToFiles;
 extern const int_T gblNumFrFiles;
 extern const int_T gblNumFrWksBlocks;
-extern rtInportTUtable *gblInportTUtables;
+//extern rtInportTUtable *gblInportTUtables; // Lihao
 extern const char *gblInportFileName;
 extern const int_T gblNumRootInportBlks;
 extern const int_T gblNumModelInputs;

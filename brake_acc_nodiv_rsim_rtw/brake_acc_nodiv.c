@@ -18,7 +18,16 @@
 #include <math.h>
 #include "brake_acc_nodiv.h"
 #include "brake_acc_nodiv_private.h"
-#include "brake_acc_nodiv_dt.h"
+
+// Lihao
+//#include "brake_acc_nodiv_dt.h"
+#include "brake_acc_nodiv_data.c"
+#include "rt_nonfinite.c"
+#include "rt_look1d.c"
+
+const int __CPROVER_thread_priorities[] = {5, 5, 5, 5, 2};
+const char* __CPROVER_threads[] = {"c::task_RR_Wheel", "c::task_FR_Wheel",
+  "c::task_FL_Wheel", "c::task_RL_Wheel", "task_compute"};
 
 /* user code (top of parameter file) */
 const int_T gblNumToFiles = 0;
@@ -30,7 +39,7 @@ const char *gblSlvrJacPatternFileName =
 /* Root inports information  */
 const int_T gblNumRootInportBlks = 0;
 const int_T gblNumModelInputs = 0;
-extern rtInportTUtable *gblInportTUtables;
+//extern rtInportTUtable *gblInportTUtables; // Lihao
 extern const char *gblInportFileName;
 const int_T gblInportDataTypeIdx[] = { -1 };
 
@@ -42,8 +51,9 @@ const int_T gblInportInterpoFlag[] = { -1 };
 
 const int_T gblInportContinuous[] = { -1 };
 
-#include "simstruc.h"
-#include "fixedpoint.h"
+// Lihao
+//#include "simstruc.h"
+//#include "fixedpoint.h"
 
 /* Block signals (auto storage) */
 BlockIO rtB;
@@ -52,8 +62,9 @@ BlockIO rtB;
 D_Work rtDWork;
 
 /* Parent Simstruct */
-static SimStruct model_S;
-SimStruct *const rtS = &model_S;
+// Lihao
+//static SimStruct model_S;
+//SimStruct *const rtS = &model_S;
 
 /* Lookup Binary Search Utility BINARYSEARCH_real_T */
 void BINARYSEARCH_real_T(uint32_T *piLeft, uint32_T *piRght, real_T u, const
@@ -514,60 +525,134 @@ void MdlInitialize(void)
   rtDWork.RT3_Buffer0 = rtP.RT3_X0;
 }
 
-/* Start for root system: '<Root>' */
-void MdlStart(void)
+// Lihao
+void task_RR_Wheel(void)
+{ 
+  real_T rtb_RR;
+  real_T rtb_to_int;
+
+  /* Switch: '<S30>/RR' incorporates:
+   *  Gain: '<S30>/half'
+   *  Gain: '<S30>/negative'
+   */
+  if (rtB.RT5 > rtP.RR_Threshold) {
+    rtb_RR = rtP.negative_Gain * rtB.RT5;
+  } else {
+    rtb_RR = rtP.half_Gain[0] * rtb_to_int;
+  }
+
+  /* End of Switch: '<S30>/RR' */
+
+  /* Outputs for Atomic SubSystem: '<S30>/Vehicle Model' */
+  /* Saturate: '<S39>/Saturation' incorporates:
+   *  UnitDelay: '<S39>/Unit Delay'
+   */
+  rtB.Saturation = rtDWork.UnitDelay_DSTATE >= rtP.Saturation_UpperSat ?
+    rtP.Saturation_UpperSat : rtDWork.UnitDelay_DSTATE <=
+    rtP.Saturation_LowerSat ? rtP.Saturation_LowerSat :
+    rtDWork.UnitDelay_DSTATE;
+
+  /* End of Outputs for SubSystem: '<S30>/Vehicle Model' */
+
+  /* Outputs for Atomic SubSystem: '<S30>/RR_Wheel' */
+  brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RR, &rtB.RR_Wheel,
+    &rtDWork.RR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RR_Wheel);
+
+  /* End of Outputs for SubSystem: '<S30>/RR_Wheel' */
+
+  /* Update for Atomic SubSystem: '<S30>/RR_Wheel' */
+  brake_acc_nodiv_FL_Wheel_Update(&rtB.RR_Wheel, &rtDWork.RR_Wheel);
+
+  /* End of Update for SubSystem: '<S30>/RR_Wheel' */
+}
+
+void task_FL_Wheel(void)
 {
-  /* Start for RateTransition: '<Root>/RT2' */
-  rtB.RT2 = rtP.RT2_X0;
+  real_T rtb_FL;
+  real_T rtb_half_idx;
 
-  /* Start for RateTransition: '<Root>/RT4' */
-  rtB.RT4 = rtP.RT4_X0;
+  /* Switch: '<S30>/FL' incorporates:
+  *  Gain: '<S30>/negative3'
+  */
+  if (rtB.RT8 > rtP.FL_Threshold) {
+    rtb_FL = rtP.negative3_Gain * rtB.RT8;
+  } else {
+    rtb_FL = rtb_half_idx;
+  }
 
-  /* Start for RateTransition: '<Root>/RT5' */
-  rtB.RT5 = rtP.RT5_X0;
+  /* End of Switch: '<S30>/FL' */
 
-  /* Start for RateTransition: '<Root>/RT6' */
-  rtB.RT6 = rtP.RT6_X0;
+  /* Outputs for Atomic SubSystem: '<S30>/FL_Wheel' */
+  brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FL, &rtB.FL_Wheel,
+    &rtDWork.FL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FL_Wheel);
 
-  /* Start for RateTransition: '<Root>/RT7' */
-  rtB.RT7 = rtP.RT7_X0;
+  /* End of Outputs for SubSystem: '<S30>/FL_Wheel' */
 
-  /* Start for RateTransition: '<Root>/RT8' */
-  rtB.RT8 = rtP.RT8_X0;
+  /* Update for Atomic SubSystem: '<S30>/FL_Wheel' */
+  brake_acc_nodiv_FL_Wheel_Update(&rtB.FL_Wheel, &rtDWork.FL_Wheel);
 
-  /* Start for S-Function (fcncallgen): '<Root>/5ms' incorporates:
-   *  Start for SubSystem: '<Root>/Vehicle_Body_Wheels'
+  /* End of Update for SubSystem: '<S30>/FL_Wheel' */
+}
+
+void task_FR_Wheel(void)
+{
+  real_T rtb_FR;
+  real_T rtb_half_idx_0;
+
+  /* Switch: '<S30>/FR' incorporates:
+   *  Gain: '<S30>/negative2'
    */
+  if (rtB.RT7 > rtP.FR_Threshold) {
+    rtb_FR = rtP.negative2_Gain * rtB.RT7;
+  } else {
+    rtb_FR = rtb_half_idx_0;
+  }
 
-  /* Start for S-Function (fcncallgen): '<Root>/10ms_3' incorporates:
-   *  Start for SubSystem: '<Root>/ABS_FR_Wheel'
+  /* End of Switch: '<S30>/FR' */
+
+  /* Outputs for Atomic SubSystem: '<S30>/FR_Wheel' */
+  brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FR, &rtB.FR_Wheel,
+    &rtDWork.FR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FR_Wheel);
+
+  /* End of Outputs for SubSystem: '<S30>/FR_Wheel' */
+
+  /* Update for Atomic SubSystem: '<S30>/FR_Wheel' */
+  brake_acc_nodiv_FL_Wheel_Update(&rtB.FR_Wheel, &rtDWork.FR_Wheel);
+
+  /* End of Update for SubSystem: '<S30>/FR_Wheel' */
+}
+
+void task_RL_Wheel(void)
+{  
+  real_T rtb_RL;
+  real_T rtb_half_idx_1;
+
+  /* Switch: '<S30>/RL' incorporates:
+   *  Gain: '<S30>/negative1'
    */
-  /* Start for RateTransition: '<Root>/RT' */
-  rtB.RT = rtP.RT_X0;
+  if (rtB.RT6 > rtP.RL_Threshold) {
+    rtb_RL = rtP.negative1_Gain * rtB.RT6;
+  } else {
+    rtb_RL = rtb_half_idx_1;
+  }
 
-  /* Start for S-Function (fcncallgen): '<Root>/10ms_1' incorporates:
-   *  Start for SubSystem: '<Root>/ABS_RR_Wheel'
-   */
-  /* Start for RateTransition: '<Root>/TmpRTBAtSpeedInport2' */
-  rtB.TmpRTBAtSpeedInport2 = rtP.TmpRTBAtSpeedInport2_X0;
+  /* End of Switch: '<S30>/RL' */
 
-  /* Start for RateTransition: '<Root>/RT1' */
-  rtB.RT1 = rtP.RT1_X0;
+  /* Outputs for Atomic SubSystem: '<S30>/RL_Wheel' */
+  brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RL, &rtB.RL_Wheel,
+    &rtDWork.RL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RL_Wheel);
 
-  /* Start for S-Function (fcncallgen): '<Root>/10ms_2' incorporates:
-   *  Start for SubSystem: '<Root>/ABS_RL_Wheel'
-   */
-  /* Start for RateTransition: '<Root>/RT3' */
-  rtB.RT3 = rtP.RT3_X0;
+  /* End of Outputs for SubSystem: '<S30>/RL_Wheel' */
 
-  /* Start for S-Function (fcncallgen): '<Root>/10ms_4' incorporates:
-   *  Start for SubSystem: '<Root>/ABS_FL_Wheel'
-   */
-  MdlInitialize();
+  /* Update for Atomic SubSystem: '<S30>/RL_Wheel' */
+  brake_acc_nodiv_FL_Wheel_Update(&rtB.RL_Wheel, &rtDWork.RL_Wheel);
+
+  /* End of Update for SubSystem: '<S30>/RL_Wheel' */
 }
 
 /* Outputs for root system: '<Root>' */
-void MdlOutputs(int_T tid)
+//void MdlOutputs(int_T tid) // Lihao
+void task_compute(void)
 {
   /* local block i/o variables */
   real_T rtb_RR;
@@ -585,10 +670,10 @@ void MdlOutputs(int_T tid)
   /* RateTransition: '<Root>/RT2' incorporates:
    *  RateTransition: '<Root>/RT4'
    */
-  if (ssIsSampleHit(rtS, 2, tid) && ssIsSpecialSampleHit(rtS,3,2,tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid) && ssIsSpecialSampleHit(rtS,3,2,tid)) {
     rtB.RT2 = rtDWork.RT2_Buffer0;
     rtB.RT4 = rtDWork.RT4_Buffer0;
-  }
+//  }
 
   /* End of RateTransition: '<Root>/RT2' */
 
@@ -597,30 +682,30 @@ void MdlOutputs(int_T tid)
    *  RateTransition: '<Root>/RT7'
    *  RateTransition: '<Root>/RT8'
    */
-  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,2,1,tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,2,1,tid)) {
     rtB.RT5 = rtDWork.RT5_Buffer0;
     rtB.RT6 = rtDWork.RT6_Buffer0;
     rtB.RT7 = rtDWork.RT7_Buffer0;
     rtB.RT8 = rtDWork.RT8_Buffer0;
-  }
+//  }
 
   /* End of RateTransition: '<Root>/RT5' */
-  if (ssIsContinuousTask(rtS, tid)) {
+//  if (ssIsContinuousTask(rtS, tid)) {
     /* Clock: '<S6>/Clock' */
-    rtb_Pedal_map = ssGetT(rtS);
+//    rtb_Pedal_map = ssGetT(rtS);
 
     /* Sum: '<S6>/Sum' incorporates:
      *  S-Function (sfun_tstart): '<S6>/startTime'
      */
     rtb_Pedal_map -= 0.0;
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Constant: '<S6>/Constant' */
     rtB.Constant = rtP.Constant_Value;
-  }
+//  }
 
-  if (ssIsContinuousTask(rtS, tid)) {
+//  if (ssIsContinuousTask(rtS, tid)) {
     /* Math: '<S6>/Math Function' */
     rtb_Pedal_map = rt_remd_snf(rtb_Pedal_map, rtB.Constant);
 
@@ -632,9 +717,9 @@ void MdlOutputs(int_T tid)
     rtB.Pedal_map = rtb_Pedal_map >= rtP.Pedal_map_UpperSat ?
       rtP.Pedal_map_UpperSat : rtb_Pedal_map <= rtP.Pedal_map_LowerSat ?
       rtP.Pedal_map_LowerSat : rtb_Pedal_map;
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Rounding: '<S19>/to_int' */
     rtb_to_int = rt_roundd_snf(rtB.Pedal_map);
 
@@ -646,6 +731,8 @@ void MdlOutputs(int_T tid)
     rtb_half_idx_0 = rtP.half_Gain[2] * rtb_to_int;
     rtb_half_idx = rtP.half_Gain[3] * rtb_to_int;
 
+// Lihao
+#if 0
     /* Switch: '<S30>/RR' incorporates:
      *  Gain: '<S30>/half'
      *  Gain: '<S30>/negative'
@@ -725,6 +812,7 @@ void MdlOutputs(int_T tid)
       &rtDWork.RL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RL_Wheel);
 
     /* End of Outputs for SubSystem: '<S30>/RL_Wheel' */
+#endif // Lihao
 
     /* Gain: '<S30>/v (km//h)' */
     rtB.vkmh = rtP.vkmh_Gain_j * rtB.Saturation;
@@ -733,6 +821,9 @@ void MdlOutputs(int_T tid)
     /* Sum: '<S39>/Add' */
     rtB.Add = ((rtB.RR_Wheel.Product + rtB.RL_Wheel.Product) +
                rtB.FR_Wheel.Product) + rtB.FL_Wheel.Product;
+    // Lihao
+    assert(rtB.Add == ((rtB.RR_Wheel.Product + rtB.RL_Wheel.Product) +
+               rtB.FR_Wheel.Product) + rtB.FL_Wheel.Product);
 
     /* Gain: '<S39>/sample_time_over_mass' */
     rtB.sample_time_over_mass = rtP.sample_time_over_mass_Gain * rtB.Add;
@@ -744,6 +835,7 @@ void MdlOutputs(int_T tid)
 
     /* End of Update for SubSystem: '<S30>/Vehicle Model' */
 
+#if 0 // Lihao
     /* Update for Atomic SubSystem: '<S30>/RR_Wheel' */
     brake_acc_nodiv_FL_Wheel_Update(&rtB.RR_Wheel, &rtDWork.RR_Wheel);
 
@@ -763,19 +855,20 @@ void MdlOutputs(int_T tid)
     brake_acc_nodiv_FL_Wheel_Update(&rtB.RL_Wheel, &rtDWork.RL_Wheel);
 
     /* End of Update for SubSystem: '<S30>/RL_Wheel' */
+#endif
 
     /* Rounding: '<S14>/to_int' */
     rtb_to_int = rt_roundd_snf(rtB.FR_Wheel.wrpm);
 
     /* RateTransition: '<Root>/RT18' */
-    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
       rtB.RT18 = rtb_to_int;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT18' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 2, tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid)) {
     /* S-Function (fcncallgen): '<Root>/10ms_3' incorporates:
      *  SubSystem: '<Root>/ABS_FR_Wheel'
      */
@@ -784,81 +877,81 @@ void MdlOutputs(int_T tid)
       &rtP.ABS_FR_Wheel);
 
     /* RateTransition: '<Root>/RT' */
-    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
       rtB.RT = rtDWork.RT_Buffer0;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Rounding: '<S18>/to_int' */
     rtb_to_int1 = rt_roundd_snf(rtB.RR_Wheel.wrpm);
 
     /* RateTransition: '<Root>/RT16' */
-    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
       rtB.RT16 = rtb_to_int1;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT16' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 2, tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid)) {
     /* S-Function (fcncallgen): '<Root>/10ms_1' incorporates:
      *  SubSystem: '<Root>/ABS_RR_Wheel'
      */
     brake_acc_nodiv_ABS_RR_Wheel(rtB.RT4, rtB.RT, rtB.RT16, &rtB.ABS_RR_Wheel,
       (rtP_ABS_RR_Wheel_brake_acc_nodi *) &rtP.ABS_RR_Wheel);
-  }
+//  }
 
   /* RateTransition: '<Root>/RT9' */
-  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,3,1,tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,3,1,tid)) {
     rtB.RT9 = rtb_to_int1;
-  }
+//  }
 
   /* End of RateTransition: '<Root>/RT9' */
-  if (ssIsSampleHit(rtS, 3, tid)) {
-  }
+//  if (ssIsSampleHit(rtS, 3, tid)) {
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Rounding: '<S12>/to_int1' */
     rtb_to_int1 = rt_roundd_snf(rtB.FL_Wheel.wrpm);
 
     /* RateTransition: '<Root>/RT12' */
-    if (ssIsSpecialSampleHit(rtS,3,1,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,1,tid)) {
       rtB.RT12 = rtb_to_int1;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT12' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 3, tid)) {
-  }
+//  if (ssIsSampleHit(rtS, 3, tid)) {
+//  }
 
   /* RateTransition: '<Root>/TmpRTBAtSpeedInport2' */
-  if (ssIsSampleHit(rtS, 1, tid)) {
-    if (ssIsSpecialSampleHit(rtS,3,1,tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,1,tid)) {
       rtB.TmpRTBAtSpeedInport2 = rtDWork.TmpRTBAtSpeedInport2_Buffer0;
-    }
-  }
+//    }
+//  }
 
   /* End of RateTransition: '<Root>/TmpRTBAtSpeedInport2' */
-  if (ssIsContinuousTask(rtS, tid)) {
+//  if (ssIsContinuousTask(rtS, tid)) {
     /* Clock: '<S7>/Clock' */
-    rtb_Pedal_map = ssGetT(rtS);
+//    rtb_Pedal_map = ssGetT(rtS);
 
     /* Sum: '<S7>/Sum' incorporates:
      *  S-Function (sfun_tstart): '<S7>/startTime'
      */
     rtb_Pedal_map -= 0.0;
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Constant: '<S7>/Constant' */
     rtB.Constant_f = rtP.Constant_Value_j;
-  }
+//  }
 
-  if (ssIsContinuousTask(rtS, tid)) {
+//  if (ssIsContinuousTask(rtS, tid)) {
     /* Math: '<S7>/Math Function' */
     rtb_Pedal_map = rt_remd_snf(rtb_Pedal_map, rtB.Constant_f);
 
@@ -872,14 +965,14 @@ void MdlOutputs(int_T tid)
       rtP.Pedal_map_LowerSat_h : rtb_Pedal_map;
 
     /* RateTransition: '<Root>/RT13' */
-    if (ssIsSpecialSampleHit(rtS,2,0,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,2,0,tid)) {
       rtB.RT13 = rtb_Pedal_map;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT13' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 2, tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid)) {
     /* S-Function (fcncallgen): '<Root>/10ms' incorporates:
      *  SubSystem: '<Root>/Brake_Torq_Calculation'
      */
@@ -889,26 +982,26 @@ void MdlOutputs(int_T tid)
     rtB.Gain1 = rtP.Gain1_Gain * rt_roundd_snf(rtB.RT13);
 
     /* RateTransition: '<Root>/RT1' */
-    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
       rtB.RT1 = rtDWork.RT1_Buffer0;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT1' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 1, tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid)) {
     /* Rounding: '<S16>/to_int' */
     rtb_to_int_g = rt_roundd_snf(rtB.RL_Wheel.wrpm);
 
     /* RateTransition: '<Root>/RT17' */
-    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,2,1,tid)) {
       rtB.RT17 = rtb_to_int_g;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT17' */
-  }
+//  }
 
-  if (ssIsSampleHit(rtS, 2, tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid)) {
     /* S-Function (fcncallgen): '<Root>/10ms_2' incorporates:
      *  SubSystem: '<Root>/ABS_RL_Wheel'
      */
@@ -917,20 +1010,20 @@ void MdlOutputs(int_T tid)
       &rtP.ABS_RL_Wheel);
 
     /* RateTransition: '<Root>/RT3' */
-    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
       rtB.RT3 = rtDWork.RT3_Buffer0;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT3' */
-  }
+//  }
 
   /* RateTransition: '<Root>/RT19' */
-  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,2,1,tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,2,1,tid)) {
     rtB.RT19 = rtb_to_int1;
-  }
+//  }
 
   /* End of RateTransition: '<Root>/RT19' */
-  if (ssIsSampleHit(rtS, 2, tid)) {
+//  if (ssIsSampleHit(rtS, 2, tid)) {
     /* S-Function (fcncallgen): '<Root>/10ms_4' incorporates:
      *  SubSystem: '<Root>/ABS_FL_Wheel'
      */
@@ -939,23 +1032,23 @@ void MdlOutputs(int_T tid)
       &rtP.ABS_FL_Wheel);
 
     /* RateTransition: '<Root>/RT14' */
-    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
+//    if (ssIsSpecialSampleHit(rtS,3,2,tid)) {
       rtB.RT14 = rtB.Gain1;
-    }
+//    }
 
     /* End of RateTransition: '<Root>/RT14' */
-  }
+//  }
 
   /* RateTransition: '<Root>/RT10' incorporates:
    *  RateTransition: '<Root>/RT11'
    */
-  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,3,1,tid)) {
+//  if (ssIsSampleHit(rtS, 1, tid) && ssIsSpecialSampleHit(rtS,3,1,tid)) {
     rtB.RT10 = rtb_to_int_g;
     rtB.RT11 = rtb_to_int;
-  }
+//  }
 
   /* End of RateTransition: '<Root>/RT10' */
-  if (ssIsSampleHit(rtS, 3, tid)) {
+//  if (ssIsSampleHit(rtS, 3, tid)) {
     /* S-Function (fcncallgen): '<Root>/20ms' incorporates:
      *  SubSystem: '<Root>/Global Brake Controller'
      */
@@ -975,10 +1068,76 @@ void MdlOutputs(int_T tid)
      */
     rtB.vkmh_f = (((rtB.RT9 + rtB.RT10) + rtB.RT11) + rtB.RT12) *
       rtP.average_rpm_Gain * rtP.wgrads_Gain * rtP.vkmh_Gain;
-  }
+//  }
+}
+
+/* Start for root system: '<Root>' */
+//void MdlStart(void) // Lihao
+void main(void)
+{
+  /* Start for RateTransition: '<Root>/RT2' */
+  rtB.RT2 = rtP.RT2_X0;
+
+  /* Start for RateTransition: '<Root>/RT4' */
+  rtB.RT4 = rtP.RT4_X0;
+
+  /* Start for RateTransition: '<Root>/RT5' */
+  rtB.RT5 = rtP.RT5_X0;
+
+  /* Start for RateTransition: '<Root>/RT6' */
+  rtB.RT6 = rtP.RT6_X0;
+
+  /* Start for RateTransition: '<Root>/RT7' */
+  rtB.RT7 = rtP.RT7_X0;
+
+  /* Start for RateTransition: '<Root>/RT8' */
+  rtB.RT8 = rtP.RT8_X0;
+
+  /* Start for S-Function (fcncallgen): '<Root>/5ms' incorporates:
+   *  Start for SubSystem: '<Root>/Vehicle_Body_Wheels'
+   */
+
+  /* Start for S-Function (fcncallgen): '<Root>/10ms_3' incorporates:
+   *  Start for SubSystem: '<Root>/ABS_FR_Wheel'
+   */
+  /* Start for RateTransition: '<Root>/RT' */
+  rtB.RT = rtP.RT_X0;
+
+  /* Start for S-Function (fcncallgen): '<Root>/10ms_1' incorporates:
+   *  Start for SubSystem: '<Root>/ABS_RR_Wheel'
+   */
+  /* Start for RateTransition: '<Root>/TmpRTBAtSpeedInport2' */
+  rtB.TmpRTBAtSpeedInport2 = rtP.TmpRTBAtSpeedInport2_X0;
+
+  /* Start for RateTransition: '<Root>/RT1' */
+  rtB.RT1 = rtP.RT1_X0;
+
+  /* Start for S-Function (fcncallgen): '<Root>/10ms_2' incorporates:
+   *  Start for SubSystem: '<Root>/ABS_RL_Wheel'
+   */
+  /* Start for RateTransition: '<Root>/RT3' */
+  rtB.RT3 = rtP.RT3_X0;
+
+  /* Start for S-Function (fcncallgen): '<Root>/10ms_4' incorporates:
+   *  Start for SubSystem: '<Root>/ABS_FL_Wheel'
+   */
+  MdlInitialize();
+
+  // Lihao
+  __CPROVER_ASYNC_1:
+  task_RR_Wheel();
+  __CPROVER_ASYNC_1:
+  task_FL_Wheel();
+  __CPROVER_ASYNC_1:
+  task_FR_Wheel();
+  __CPROVER_ASYNC_1:
+  task_RL_Wheel();
+  __CPROVER_ASYNC_1:
+  task_compute();
 }
 
 /* Update for root system: '<Root>' */
+#if 0 // Lihao
 void MdlUpdate(int_T tid)
 {
   /* Update for RateTransition: '<Root>/RT2' */
@@ -1185,3 +1344,4 @@ SimStruct * brake_acc_nodiv(void)
   rtP.ABS_RR_Wheel.positive_UpperSat = rtInf;
   return rtS;
 }
+#endif

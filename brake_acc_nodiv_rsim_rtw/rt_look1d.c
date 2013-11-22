@@ -17,6 +17,7 @@
  */
 
 #include "rt_look1d.h"
+#include "rt_look.c" // Lihao
 
 /* 1D lookup routine for data type of real_T. */
 real_T rt_Lookup(const real_T *x, int_T xlen, real_T u, const real_T *y)

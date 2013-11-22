@@ -80,6 +80,8 @@ extern void brake_acc_nodiv_FL_Wheel(real_T rtu_v_mps, real_T rtu_M_abs_Nm,
   rtB_FL_Wheel_brake_acc_nodiv *localB, rtDW_FL_Wheel_brake_acc_nodiv *localDW,
   rtP_FL_Wheel_brake_acc_nodiv *localP);
 
+// Lihao
+#if 0
 #if !defined(MULTITASKING) && !defined(NRT)
 #  error Model (brake_acc_nodiv) was built \
 in MultiTasking solver mode, however the MULTITASKING define \
@@ -87,3 +89,4 @@ is not present. Please verify that your template makefile is \
 configured correctly.
 #endif
 #endif                                 /* RTW_HEADER_brake_acc_nodiv_private_h_ */
+#endif
