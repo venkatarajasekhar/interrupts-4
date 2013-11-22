@@ -473,4 +473,8 @@ extern const int_T gblInportComplex[];
 extern const int_T gblInportInterpoFlag[];
 extern const int_T gblInportContinuous[];
 
+#define ceil(x) __builtin_ceilf(x)
+#define floor(x) __builtin_floorf(x)
+#define fmod(x,y) __builtin_fmodf(x,y)
+
 #endif                                 /* RTW_HEADER_brake_acc_nodiv_h_ */
