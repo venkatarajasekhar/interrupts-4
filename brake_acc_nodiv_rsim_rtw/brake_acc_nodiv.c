@@ -593,10 +593,12 @@ void task_RL_Wheel(void)
 void task_compute(void)
 {
   /* local block i/o variables */
+/* // Lihao
   real_T rtb_RR;
   real_T rtb_FL;
   real_T rtb_FR;
   real_T rtb_RL;
+*/
   real_T rtb_Pedal_map;
   real_T rtb_to_int;
   real_T rtb_to_int1;
