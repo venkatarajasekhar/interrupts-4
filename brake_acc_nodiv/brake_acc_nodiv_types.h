@@ -3,11 +3,11 @@
  *
  * Code generation for model "brake_acc_nodiv.mdl".
  *
- * Model version              : 1.769
+ * Model version              : 1.770
  * Simulink Coder version : 8.1 (R2011b) 08-Jul-2011
- * C source code generated on : Tue Nov 19 17:35:20 2013
+ * C source code generated on : Sat Nov 23 14:07:13 2013
  *
- * Target selection: rsim.tlc
+ * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
  * Embedded hardware selection: 32-bit Generic
  * Emulation hardware selection:
@@ -26,6 +26,9 @@ typedef struct rtP_ABS_RR_Wheel_brake_acc_nodi_ rtP_ABS_RR_Wheel_brake_acc_nodi;
 typedef struct rtP_FL_Wheel_brake_acc_nodiv_ rtP_FL_Wheel_brake_acc_nodiv;
 
 /* Parameters (auto storage) */
-typedef struct Parameters_ Parameters;
+typedef struct Parameters_brake_acc_nodiv_ Parameters_brake_acc_nodiv;
+
+/* Forward declaration for rtModel */
+typedef struct RT_MODEL_brake_acc_nodiv RT_MODEL_brake_acc_nodiv;
 
 #endif                                 /* RTW_HEADER_brake_acc_nodiv_types_h_ */

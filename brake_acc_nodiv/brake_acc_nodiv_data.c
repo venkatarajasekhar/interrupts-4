@@ -3,11 +3,11 @@
  *
  * Code generation for model "brake_acc_nodiv.mdl".
  *
- * Model version              : 1.769
+ * Model version              : 1.770
  * Simulink Coder version : 8.1 (R2011b) 08-Jul-2011
- * C source code generated on : Tue Nov 19 17:35:20 2013
+ * C source code generated on : Sat Nov 23 14:07:13 2013
  *
- * Target selection: rsim.tlc
+ * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
  * Embedded hardware selection: 32-bit Generic
  * Emulation hardware selection:
@@ -19,7 +19,7 @@
 #include "brake_acc_nodiv_private.h"
 
 /* Block parameters (auto storage) */
-Parameters rtP = {
+Parameters_brake_acc_nodiv brake_acc_nodiv_P = {
   30.0,                                /* Expression: maxBrakeTorque/100
                                         * Referenced by: '<S5>/Gain1'
                                         */
@@ -49,7 +49,7 @@ Parameters rtP = {
   -1.0,                                /* Expression: -1
                                         * Referenced by: '<S30>/negative3'
                                         */
-  2.5E-6,                              /* Expression: T_veh/M
+  1.0E-5,                              /* Expression: T_veh/M
                                         * Referenced by: '<S39>/sample_time_over_mass'
                                         */
   0.0,                                 /* Expression: v0
@@ -81,24 +81,6 @@ Parameters rtP = {
   3.6,                                 /* Expression: 3.6
                                         * Referenced by: '<S30>/v (km//h)'
                                         */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT2'
-                                        */
-  0.0,                                 /* Expression: v0*3.6
-                                        * Referenced by: '<Root>/RT4'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT5'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT6'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT7'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT8'
-                                        */
   100.0,                               /* Expression: period
                                         * Referenced by: '<S6>/Constant'
                                         */
@@ -118,12 +100,6 @@ Parameters rtP = {
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S9>/Pedal_map'
                                         */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: 'synthesized block'
-                                        */
   100.0,                               /* Expression: period
                                         * Referenced by: '<S7>/Constant'
                                         */
@@ -142,12 +118,6 @@ Parameters rtP = {
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S10>/Pedal_map'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT1'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/RT3'
                                         */
 
   /* Start of '<S30>/RR_Wheel' */
@@ -192,7 +162,7 @@ Parameters rtP = {
     0.5,                               /* Expression: R
                                         * Referenced by: '<S38>/Radius'
                                         */
-    0.002,                             /* Expression: T_veh/I
+    0.008,                             /* Expression: T_veh/I
                                         * Referenced by: '<S38>/Ts_over_Inertia'
                                         */
     9.5493046514662954                 /* Expression: 30/pi
@@ -244,7 +214,7 @@ Parameters rtP = {
     0.5,                               /* Expression: R
                                         * Referenced by: '<S37>/Radius'
                                         */
-    0.002,                             /* Expression: T_veh/I
+    0.008,                             /* Expression: T_veh/I
                                         * Referenced by: '<S37>/Ts_over_Inertia'
                                         */
     9.5493046514662954                 /* Expression: 30/pi
@@ -296,7 +266,7 @@ Parameters rtP = {
     0.5,                               /* Expression: R
                                         * Referenced by: '<S36>/Radius'
                                         */
-    0.002,                             /* Expression: T_veh/I
+    0.008,                             /* Expression: T_veh/I
                                         * Referenced by: '<S36>/Ts_over_Inertia'
                                         */
     9.5493046514662954                 /* Expression: 30/pi
@@ -348,7 +318,7 @@ Parameters rtP = {
     0.5,                               /* Expression: R
                                         * Referenced by: '<S35>/Radius'
                                         */
-    0.002,                             /* Expression: T_veh/I
+    0.008,                             /* Expression: T_veh/I
                                         * Referenced by: '<S35>/Ts_over_Inertia'
                                         */
     9.5493046514662954                 /* Expression: 30/pi

@@ -3,11 +3,11 @@
  *
  * Code generation for model "brake_acc_nodiv.mdl".
  *
- * Model version              : 1.769
+ * Model version              : 1.770
  * Simulink Coder version : 8.1 (R2011b) 08-Jul-2011
- * C source code generated on : Tue Nov 19 17:35:20 2013
+ * C source code generated on : Sat Nov 23 14:07:13 2013
  *
- * Target selection: rsim.tlc
+ * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
  * Embedded hardware selection: 32-bit Generic
  * Emulation hardware selection:
@@ -18,8 +18,8 @@
 
 #ifndef __RTWTYPES_H__
 #define __RTWTYPES_H__
-//#include "tmwtypes.h" 
-// Lihao
+//#include "tmwtypes.h"
+
 /* This ID is used to detect inclusion of an incompatible rtwtypes.h */
 #define RTWTYPES_ID_C08S16I32L64N64F1
 //#include "simstruc_types.h"
@@ -46,16 +46,7 @@ typedef void * pointer_T;
 #define INT64_T
 
 typedef long int64_T;
-// Lihao
-typedef double real_T;
-typedef float real32_T;
-typedef int boolean_T;
-typedef int int32_T;
-typedef unsigned uint32_T;
-typedef int int_T;
-typedef unsigned uint_T;
-typedef unsigned char uint8_T;
-typedef char char_T;
+
 #endif
 
 #ifndef UINT64_T
@@ -64,6 +55,18 @@ typedef char char_T;
 typedef unsigned long uint64_T;
 
 #endif
+
+// Lihao
+typedef float real_T;
+typedef float time_T;
+typedef float real32_T;
+typedef int boolean_T;
+typedef int int32_T;
+typedef unsigned uint32_T;
+typedef int int_T;
+typedef unsigned uint_T;
+typedef unsigned char uint8_T;
+typedef char char_T;
 
 /*===========================================================================*
  * Additional complex number type definitions                                           *
