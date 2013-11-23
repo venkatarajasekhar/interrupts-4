@@ -58,6 +58,12 @@ const int_T gblInportContinuous[] = { -1 };
 /* Block signals (auto storage) */
 BlockIO rtB;
 
+// Peter: shared variables to communicate requested torque to wheel threads
+real_T rtb_RR;
+real_T rtb_FL;
+real_T rtb_FR;
+real_T rtb_RL;
+
 /* Block states (auto storage) */
 D_Work rtDWork;
 
@@ -528,32 +534,6 @@ void MdlInitialize(void)
 // Lihao
 void task_RR_Wheel(void)
 { 
-  real_T rtb_RR;
-  real_T rtb_to_int;
-
-  /* Switch: '<S30>/RR' incorporates:
-   *  Gain: '<S30>/half'
-   *  Gain: '<S30>/negative'
-   */
-  if (rtB.RT5 > rtP.RR_Threshold) {
-    rtb_RR = rtP.negative_Gain * rtB.RT5;
-  } else {
-    rtb_RR = rtP.half_Gain[0] * rtb_to_int;
-  }
-
-  /* End of Switch: '<S30>/RR' */
-
-  /* Outputs for Atomic SubSystem: '<S30>/Vehicle Model' */
-  /* Saturate: '<S39>/Saturation' incorporates:
-   *  UnitDelay: '<S39>/Unit Delay'
-   */
-  rtB.Saturation = rtDWork.UnitDelay_DSTATE >= rtP.Saturation_UpperSat ?
-    rtP.Saturation_UpperSat : rtDWork.UnitDelay_DSTATE <=
-    rtP.Saturation_LowerSat ? rtP.Saturation_LowerSat :
-    rtDWork.UnitDelay_DSTATE;
-
-  /* End of Outputs for SubSystem: '<S30>/Vehicle Model' */
-
   /* Outputs for Atomic SubSystem: '<S30>/RR_Wheel' */
   brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RR, &rtB.RR_Wheel,
     &rtDWork.RR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RR_Wheel);
@@ -568,20 +548,6 @@ void task_RR_Wheel(void)
 
 void task_FL_Wheel(void)
 {
-  real_T rtb_FL;
-  real_T rtb_half_idx;
-
-  /* Switch: '<S30>/FL' incorporates:
-  *  Gain: '<S30>/negative3'
-  */
-  if (rtB.RT8 > rtP.FL_Threshold) {
-    rtb_FL = rtP.negative3_Gain * rtB.RT8;
-  } else {
-    rtb_FL = rtb_half_idx;
-  }
-
-  /* End of Switch: '<S30>/FL' */
-
   /* Outputs for Atomic SubSystem: '<S30>/FL_Wheel' */
   brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FL, &rtB.FL_Wheel,
     &rtDWork.FL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FL_Wheel);
@@ -596,20 +562,6 @@ void task_FL_Wheel(void)
 
 void task_FR_Wheel(void)
 {
-  real_T rtb_FR;
-  real_T rtb_half_idx_0;
-
-  /* Switch: '<S30>/FR' incorporates:
-   *  Gain: '<S30>/negative2'
-   */
-  if (rtB.RT7 > rtP.FR_Threshold) {
-    rtb_FR = rtP.negative2_Gain * rtB.RT7;
-  } else {
-    rtb_FR = rtb_half_idx_0;
-  }
-
-  /* End of Switch: '<S30>/FR' */
-
   /* Outputs for Atomic SubSystem: '<S30>/FR_Wheel' */
   brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FR, &rtB.FR_Wheel,
     &rtDWork.FR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FR_Wheel);
@@ -624,20 +576,6 @@ void task_FR_Wheel(void)
 
 void task_RL_Wheel(void)
 {  
-  real_T rtb_RL;
-  real_T rtb_half_idx_1;
-
-  /* Switch: '<S30>/RL' incorporates:
-   *  Gain: '<S30>/negative1'
-   */
-  if (rtB.RT6 > rtP.RL_Threshold) {
-    rtb_RL = rtP.negative1_Gain * rtB.RT6;
-  } else {
-    rtb_RL = rtb_half_idx_1;
-  }
-
-  /* End of Switch: '<S30>/RL' */
-
   /* Outputs for Atomic SubSystem: '<S30>/RL_Wheel' */
   brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RL, &rtB.RL_Wheel,
     &rtDWork.RL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RL_Wheel);
@@ -731,8 +669,6 @@ void task_compute(void)
     rtb_half_idx_0 = rtP.half_Gain[2] * rtb_to_int;
     rtb_half_idx = rtP.half_Gain[3] * rtb_to_int;
 
-// Lihao
-#if 0
     /* Switch: '<S30>/RR' incorporates:
      *  Gain: '<S30>/half'
      *  Gain: '<S30>/negative'
@@ -756,11 +692,12 @@ void task_compute(void)
 
     /* End of Outputs for SubSystem: '<S30>/Vehicle Model' */
 
+#if 0 // Peter
     /* Outputs for Atomic SubSystem: '<S30>/RR_Wheel' */
     brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RR, &rtB.RR_Wheel,
       &rtDWork.RR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RR_Wheel);
-
     /* End of Outputs for SubSystem: '<S30>/RR_Wheel' */
+#endif// Peter
 
     /* Switch: '<S30>/FL' incorporates:
      *  Gain: '<S30>/negative3'
@@ -773,11 +710,13 @@ void task_compute(void)
 
     /* End of Switch: '<S30>/FL' */
 
+// Peter
+#if 0
     /* Outputs for Atomic SubSystem: '<S30>/FL_Wheel' */
     brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FL, &rtB.FL_Wheel,
       &rtDWork.FL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FL_Wheel);
-
     /* End of Outputs for SubSystem: '<S30>/FL_Wheel' */
+#endif // Peter
 
     /* Switch: '<S30>/FR' incorporates:
      *  Gain: '<S30>/negative2'
@@ -790,11 +729,13 @@ void task_compute(void)
 
     /* End of Switch: '<S30>/FR' */
 
+#if 0 // Peter
     /* Outputs for Atomic SubSystem: '<S30>/FR_Wheel' */
     brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_FR, &rtB.FR_Wheel,
       &rtDWork.FR_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.FR_Wheel);
-
     /* End of Outputs for SubSystem: '<S30>/FR_Wheel' */
+#endif //Peter
+
 
     /* Switch: '<S30>/RL' incorporates:
      *  Gain: '<S30>/negative1'
@@ -804,13 +745,12 @@ void task_compute(void)
     } else {
       rtb_RL = rtb_half_idx_1;
     }
-
     /* End of Switch: '<S30>/RL' */
 
+#if 0 // Peter
     /* Outputs for Atomic SubSystem: '<S30>/RL_Wheel' */
     brake_acc_nodiv_FL_Wheel(rtB.Saturation, rtb_RL, &rtB.RL_Wheel,
       &rtDWork.RL_Wheel, (rtP_FL_Wheel_brake_acc_nodiv *) &rtP.RL_Wheel);
-
     /* End of Outputs for SubSystem: '<S30>/RL_Wheel' */
 #endif // Lihao
 
