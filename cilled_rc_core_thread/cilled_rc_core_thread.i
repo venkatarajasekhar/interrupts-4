@@ -5,7 +5,7 @@
 # 19 "include/uapi/asm-generic/int-ll64.h"
 
 // Lihao
-//int test_bug = 0;
+int test_bug = 0;
 
 typedef signed char __s8;
 # 20 "include/uapi/asm-generic/int-ll64.h"
@@ -7833,7 +7833,7 @@ void *rc_dev_release_ldvwrapper(void){
 const int __CPROVER_thread_priorities[] = {1, 2, 55, 22, 142, 43};
 const char* __CPROVER_threads[] = {"c::entry_point", "c::store_protocols_ldvwrapper","c::rc_dev_uevent_ldvwrapper", "c::ir_devnode_ldvwrapper", "c::rc_dev_release_ldvwrapper", "c::show_protocols_ldvwrapper"};
 
-void main(void){
+void entry_point(void){
  ldv_initialize();
 
  ldv_retval_0=rc_core_init();
