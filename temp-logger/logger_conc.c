@@ -168,10 +168,8 @@ __TRANS_atomic_assume_task_communicate();
 __TRANS_atomic_assume_task_communicate();
     switch(cmd) {
 __TRANS_atomic_assume_task_communicate();
-__VERIFIER_atomic_begin();
       case CMD_STOP:   
         if (systemState != LOGGING) {
-__VERIFIER_atomic_end();
 __TRANS_atomic_assume_task_communicate();
 __VERIFIER_atomic_begin();
            rspStatus = RSP_ERROR;
@@ -189,22 +187,20 @@ __VERIFIER_atomic_begin();
 __VERIFIER_atomic_end();
 __TRANS_atomic_assume_task_communicate();
         break;
-__VERIFIER_atomic_begin();
       case CMD_READ_STATE:
+__VERIFIER_atomic_begin();
         send_response();
 __VERIFIER_atomic_end();
 __TRANS_atomic_assume_task_communicate();
 	break;
-__VERIFIER_atomic_begin();
       case CMD_READ_DATA:
+__VERIFIER_atomic_begin();
         send_response();
 __VERIFIER_atomic_end();
 __TRANS_atomic_assume_task_communicate();
 	break;
-__VERIFIER_atomic_begin();
       case CMD_START:
         if (systemState != IDLE) { 
-__VERIFIER_atomic_end();
 __TRANS_atomic_assume_task_communicate();
 __VERIFIER_atomic_begin();
           rspStatus = RSP_ERROR;  
