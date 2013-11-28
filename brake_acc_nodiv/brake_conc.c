@@ -1,19 +1,35 @@
 int __TRANS_thread_sleep[] = {0, 0, 0};
 
-void __VERIFIER_atomic_TRANS_enter_thread(int i) {
-__TRANS_thread_sleep[i]=1;
-}
-
-void __VERIFIER_atomic_TRANS_leave_thread(int i) {
-__TRANS_thread_sleep[i]=0;
-}
-
 void __VERIFIER_atomic_TRANS_atomic_assume_task_compute(void) {
-__VERIFIER_assume(__TRANS_thread_sleep[1]==0 && 1);
+__VERIFIER_assume(1);
+}
+
+void __VERIFIER_atomic_TRANS_task_compute_enter_thread() {
+__VERIFIER_assume(1);
+__TRANS_thread_sleep[0]=1;
+__VERIFIER_assume(1);
+}
+
+void __VERIFIER_atomic_TRANS_task_compute_leave_thread() {
+__VERIFIER_assume(1);
+__TRANS_thread_sleep[0]=0;
+__VERIFIER_assume(1);
 }
 
 void __VERIFIER_atomic_TRANS_atomic_assume_task_RR_Wheel(void) {
-__VERIFIER_assume(1);
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
+}
+
+void __VERIFIER_atomic_TRANS_task_RR_Wheel_enter_thread() {
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
+__TRANS_thread_sleep[1]=1;
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
+}
+
+void __VERIFIER_atomic_TRANS_task_RR_Wheel_leave_thread() {
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
+__TRANS_thread_sleep[1]=0;
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
 }
 
 /*
@@ -41,8 +57,7 @@ __VERIFIER_assume(1);
 #include "brake_acc_nodiv_data.c" //Peter
 
 //Lihao
-int test_i = 0;
-const int __CPROVER_thread_priorities[] = {5, 5, 5, 5, 2};
+const int __CPROVER_thread_priorities[] = {5, 5, 5, 5, 22};
 const char* __CPROVER_threads[] = {"c::task_RR_Wheel", "c::task_FR_Wheel",
 "c::task_FL_Wheel", "c::task_RL_Wheel", "c::task_compute"};
 
@@ -501,31 +516,30 @@ static void brake_acc_nodiv_update(int_T tid)
 
 // Lihao
 void task_RR_Wheel(void) {
-__TRANS_enter_thread(1);
-__TRANS_atomic_assume_task_RR_Wheel();
-// test
-__VERIFIER_atomic_begin();
-test_i = 56;
-__VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_RR_Wheel();
-
+__VERIFIER_atomic_TRANS_atomic_assume_task_RR_Wheel();
+__VERIFIER_atomic_TRANS_task_RR_Wheel_enter_thread();
+__VERIFIER_atomic_TRANS_atomic_assume_task_RR_Wheel();
   /* Outputs for Atomic SubSystem: '<S30>/RL_Wheel' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
   brake_acc_nodiv_FL_Wheel(brake_acc_nodiv_B.Saturation, rtb_RR,
     &brake_acc_nodiv_B.RR_Wheel, &brake_acc_nodiv_DWork.RR_Wheel,
     (rtP_FL_Wheel_brake_acc_nodiv *) &brake_acc_nodiv_P.RR_Wheel);
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_RR_Wheel();
+__VERIFIER_atomic_TRANS_atomic_assume_task_RR_Wheel();
   /* End of Outputs for SubSystem: '<S30>/RL_Wheel' */
 
   /* Update for Atomic SubSystem: '<S30>/RR_Wheel' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
   brake_acc_nodiv_FL_Wheel_Update(&brake_acc_nodiv_B.RR_Wheel,
     &brake_acc_nodiv_DWork.RR_Wheel);  
+__VERIFIER_assume(__TRANS_thread_sleep[0]==0 && 1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_RR_Wheel();
+__VERIFIER_atomic_TRANS_atomic_assume_task_RR_Wheel();
   /* End of Update for SubSystem: '<S30>/RR_Wheel' */
-__TRANS_leave_thread(1);
+__VERIFIER_atomic_TRANS_task_RR_Wheel_leave_thread();
 }
 
 void task_FL_Wheel(void)
@@ -573,139 +587,182 @@ void task_RL_Wheel(void)
 /* Outputs for root system: '<Root>' */
 //static void brake_acc_nodiv_output(int_T tid)
 void task_compute(void) {
-__TRANS_enter_thread(0);
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_task_compute_enter_thread();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   int_T tid;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* local block i/o variables */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_to_int_o;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_to_int1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_to_int_a;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_to_int_g;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   //  real_T rtb_RR;
   //  real_T rtb_FL;
   //  real_T rtb_FR;
   //  real_T rtb_RL;
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_LookUpTable1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_half_idx;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_half_idx_0;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   real_T rtb_half_idx_1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/10ms_3' incorporates:
    *  SubSystem: '<Root>/ABS_FR_Wheel'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_ABS_RR_Wheel(brake_acc_nodiv_B.vkmh_f,
     brake_acc_nodiv_B.Distribution[2], rtb_to_int_a,
     &brake_acc_nodiv_B.ABS_FR_Wheel, (rtP_ABS_RR_Wheel_brake_acc_nodi *)
     &brake_acc_nodiv_P.ABS_FR_Wheel);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/10ms_1' incorporates:
    *  SubSystem: '<Root>/ABS_RR_Wheel'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_ABS_RR_Wheel(brake_acc_nodiv_B.vkmh_f,
     brake_acc_nodiv_B.Distribution[0], rtb_to_int_o,
     &brake_acc_nodiv_B.ABS_RR_Wheel, (rtP_ABS_RR_Wheel_brake_acc_nodi *)
     &brake_acc_nodiv_P.ABS_RR_Wheel);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Clock: '<S6>/Clock' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = brake_acc_nodiv_M->Timing.t[0];
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Sum: '<S6>/Sum' incorporates:
    *  S-Function (sfun_tstart): '<S6>/startTime'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 -= (0.0);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Math: '<S6>/Math Function' incorporates:
    *  Constant: '<S6>/Constant'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = rt_remd_snf(rtb_LookUpTable1,
     brake_acc_nodiv_P.Constant_Value);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Lookup: '<S6>/Look-Up Table1' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = rt_Lookup((const real_T *)
     brake_acc_nodiv_P.LookUpTable1_XData, 5, rtb_LookUpTable1, (const real_T *)
     brake_acc_nodiv_P.LookUpTable1_YData);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Saturate: '<S9>/Pedal_map' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Pedal_map = rtb_LookUpTable1 >=
     brake_acc_nodiv_P.Pedal_map_UpperSat ? brake_acc_nodiv_P.Pedal_map_UpperSat :
     rtb_LookUpTable1 <= brake_acc_nodiv_P.Pedal_map_LowerSat ?
     brake_acc_nodiv_P.Pedal_map_LowerSat : rtb_LookUpTable1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Rounding: '<S19>/to_int' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int = rt_roundd_snf(brake_acc_nodiv_B.Pedal_map);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/5ms' incorporates:
    *  SubSystem: '<Root>/Vehicle_Body_Wheels'
    */
   /* Gain: '<S30>/half' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_half_idx_1 = brake_acc_nodiv_P.half_Gain[1] * rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_half_idx_0 = brake_acc_nodiv_P.half_Gain[2] * rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_half_idx = brake_acc_nodiv_P.half_Gain[3] * rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Switch: '<S30>/RR' incorporates:
    *  Gain: '<S30>/half'
@@ -713,18 +770,22 @@ __TRANS_atomic_assume_task_compute();
    */
   if (brake_acc_nodiv_B.ABS_RR_Wheel.Threshold_10kmh >
       brake_acc_nodiv_P.RR_Threshold) {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_RR = brake_acc_nodiv_P.negative_Gain *
       brake_acc_nodiv_B.ABS_RR_Wheel.Threshold_10kmh;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   } else {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_RR = brake_acc_nodiv_P.half_Gain[0] * rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   }
 
   /* End of Switch: '<S30>/RR' */
@@ -734,6 +795,7 @@ __TRANS_atomic_assume_task_compute();
    *  UnitDelay: '<S39>/Unit Delay'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Saturation = brake_acc_nodiv_DWork.UnitDelay_DSTATE >=
     brake_acc_nodiv_P.Saturation_UpperSat ?
     brake_acc_nodiv_P.Saturation_UpperSat :
@@ -741,8 +803,9 @@ __VERIFIER_atomic_begin();
     brake_acc_nodiv_P.Saturation_LowerSat ?
     brake_acc_nodiv_P.Saturation_LowerSat :
     brake_acc_nodiv_DWork.UnitDelay_DSTATE;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* End of Outputs for SubSystem: '<S30>/Vehicle Model' */
 
@@ -758,18 +821,22 @@ __TRANS_atomic_assume_task_compute();
    */
   if (brake_acc_nodiv_B.ABS_FL_Wheel.Threshold_10kmh >
       brake_acc_nodiv_P.FL_Threshold) {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_FL = brake_acc_nodiv_P.negative3_Gain *
       brake_acc_nodiv_B.ABS_FL_Wheel.Threshold_10kmh;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   } else {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_FL = rtb_half_idx;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   }
 
   /* End of Switch: '<S30>/FL' */
@@ -787,18 +854,22 @@ __TRANS_atomic_assume_task_compute();
    */
   if (brake_acc_nodiv_B.ABS_FR_Wheel.Threshold_10kmh >
       brake_acc_nodiv_P.FR_Threshold) {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_FR = brake_acc_nodiv_P.negative2_Gain *
       brake_acc_nodiv_B.ABS_FR_Wheel.Threshold_10kmh;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   } else {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_FR = rtb_half_idx_0;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   }
 
   /* End of Switch: '<S30>/FR' */
@@ -816,18 +887,22 @@ __TRANS_atomic_assume_task_compute();
    */
   if (brake_acc_nodiv_B.ABS_RL_Wheel.Threshold_10kmh >
       brake_acc_nodiv_P.RL_Threshold) {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_RL = brake_acc_nodiv_P.negative1_Gain *
       brake_acc_nodiv_B.ABS_RL_Wheel.Threshold_10kmh;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   } else {
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
     rtb_RL = rtb_half_idx_1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
   }
 
   /* End of Switch: '<S30>/RL' */
@@ -841,62 +916,61 @@ __TRANS_atomic_assume_task_compute();
 
   /* Gain: '<S30>/v (km//h)' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.vkmh = brake_acc_nodiv_P.vkmh_Gain_j *
     brake_acc_nodiv_B.Saturation;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Update for Atomic SubSystem: '<S30>/Vehicle Model' */
   /* Sum: '<S39>/Add' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Add = brake_acc_nodiv_B.RR_Wheel.Product +
       brake_acc_nodiv_B.RL_Wheel.Product + 
       brake_acc_nodiv_B.FR_Wheel.Product + 
       brake_acc_nodiv_B.FL_Wheel.Product;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
-// test
 __VERIFIER_atomic_begin();
-test_i = 1;
-__VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
-
-  // Lihao
-__VERIFIER_atomic_begin();
-  {
-__VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
-__VERIFIER_atomic_begin();
-    real_T tmp = brake_acc_nodiv_B.RR_Wheel.Product +
+__VERIFIER_assume(1);
+  real_T tmp = brake_acc_nodiv_B.RR_Wheel.Product +
       brake_acc_nodiv_B.RL_Wheel.Product + 
       brake_acc_nodiv_B.FR_Wheel.Product + 
       brake_acc_nodiv_B.FL_Wheel.Product;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
-// test
-//assert(test_i < 40);
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
+
 __VERIFIER_atomic_begin();
-    assert(fabs(brake_acc_nodiv_B.Add-tmp)<=0.001);
+__VERIFIER_assume(1);
+  assert(fabs(brake_acc_nodiv_B.Add-tmp)<=0.001);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
-  }
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Gain: '<S39>/sample_time_over_mass' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.sample_time_over_mass =
     brake_acc_nodiv_P.sample_time_over_mass_Gain * brake_acc_nodiv_B.Add;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Update for UnitDelay: '<S39>/Unit Delay' incorporates:
    *  Sum: '<S39>/Sum'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_DWork.UnitDelay_DSTATE =
     brake_acc_nodiv_B.sample_time_over_mass + brake_acc_nodiv_B.Saturation;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* End of Update for SubSystem: '<S30>/Vehicle Model' */
 
@@ -923,15 +997,19 @@ __TRANS_atomic_assume_task_compute();
 
   /* Rounding: '<S18>/to_int' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int_o = rt_roundd_snf(brake_acc_nodiv_B.RR_Wheel.wrpm);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Rounding: '<S12>/to_int1' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int1 = rt_roundd_snf(brake_acc_nodiv_B.FL_Wheel.wrpm);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/20ms1' incorporates:
    *  SubSystem: '<Root>/Veh_Speed_Estimator'
@@ -942,52 +1020,64 @@ __TRANS_atomic_assume_task_compute();
    *  Sum: '<S29>/Add'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.vkmh_f = (((rtb_to_int_o + rtb_to_int_g) + rtb_to_int_a) +
     rtb_to_int1) * brake_acc_nodiv_P.average_rpm_Gain *
     brake_acc_nodiv_P.wgrads_Gain * brake_acc_nodiv_P.vkmh_Gain;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Clock: '<S7>/Clock' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = brake_acc_nodiv_M->Timing.t[0];
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Sum: '<S7>/Sum' incorporates:
    *  S-Function (sfun_tstart): '<S7>/startTime'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 -= (0.0);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Math: '<S7>/Math Function' incorporates:
    *  Constant: '<S7>/Constant'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = rt_remd_snf(rtb_LookUpTable1,
     brake_acc_nodiv_P.Constant_Value_j);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Lookup: '<S7>/Look-Up Table1' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_LookUpTable1 = rt_Lookup((const real_T *)
     brake_acc_nodiv_P.LookUpTable1_XData_j, 4, rtb_LookUpTable1, (const real_T *)
     brake_acc_nodiv_P.LookUpTable1_YData_m);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Saturate: '<S10>/Pedal_map' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Pedal_map_f = rtb_LookUpTable1 >=
     brake_acc_nodiv_P.Pedal_map_UpperSat_i ?
     brake_acc_nodiv_P.Pedal_map_UpperSat_i : rtb_LookUpTable1 <=
     brake_acc_nodiv_P.Pedal_map_LowerSat_h ?
     brake_acc_nodiv_P.Pedal_map_LowerSat_h : rtb_LookUpTable1;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/10ms' incorporates:
    *  SubSystem: '<Root>/Brake_Torq_Calculation'
@@ -996,82 +1086,104 @@ __TRANS_atomic_assume_task_compute();
    *  Rounding: '<S20>/round_to_int'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int = brake_acc_nodiv_P.Gain1_Gain * rt_roundd_snf
     (brake_acc_nodiv_B.Pedal_map_f);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/10ms_2' incorporates:
    *  SubSystem: '<Root>/ABS_RL_Wheel'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_ABS_RR_Wheel(brake_acc_nodiv_B.vkmh_f,
     brake_acc_nodiv_B.Distribution[1], rtb_to_int_g,
     &brake_acc_nodiv_B.ABS_RL_Wheel, (rtP_ABS_RR_Wheel_brake_acc_nodi *)
     &brake_acc_nodiv_P.ABS_RL_Wheel);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/10ms_4' incorporates:
    *  SubSystem: '<Root>/ABS_FL_Wheel'
    */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_ABS_RR_Wheel(brake_acc_nodiv_B.vkmh_f,
     brake_acc_nodiv_B.Distribution[3], rtb_to_int1,
     &brake_acc_nodiv_B.ABS_FL_Wheel, (rtP_ABS_RR_Wheel_brake_acc_nodi *)
     &brake_acc_nodiv_P.ABS_FL_Wheel);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* S-Function (fcncallgen): '<Root>/20ms' incorporates:
    *  SubSystem: '<Root>/Global Brake Controller'
    */
   /* Gain: '<S8>/Distribution' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Distribution[0] = brake_acc_nodiv_P.Distribution_Gain[0] *
     rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Distribution[1] = brake_acc_nodiv_P.Distribution_Gain[1] *
     rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Distribution[2] = brake_acc_nodiv_P.Distribution_Gain[2] *
     rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_B.Distribution[3] = brake_acc_nodiv_P.Distribution_Gain[3] *
     rtb_to_int;
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Rounding: '<S14>/to_int' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int_a = rt_roundd_snf(brake_acc_nodiv_B.FR_Wheel.wrpm);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* Rounding: '<S16>/to_int' */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   rtb_to_int_g = rt_roundd_snf(brake_acc_nodiv_B.RL_Wheel.wrpm);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
   /* tid is required for a uniform function interface.
    * Argument tid is not used in the function. */
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   UNUSED_PARAMETER(tid);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
 
 __VERIFIER_atomic_begin();
+__VERIFIER_assume(1);
   brake_acc_nodiv_update(tid);
+__VERIFIER_assume(1);
 __VERIFIER_atomic_end();
-__TRANS_atomic_assume_task_compute();
-__TRANS_leave_thread(0);
+__VERIFIER_atomic_TRANS_atomic_assume_task_compute();
+__VERIFIER_atomic_TRANS_task_compute_leave_thread();
 }
 
 
