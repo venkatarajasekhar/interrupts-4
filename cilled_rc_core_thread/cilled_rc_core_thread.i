@@ -5494,6 +5494,7 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
   int tmp___2 ;
 
   {
+
 # 829 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   __mptr = (struct device const *)device;
 # 829 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5507,25 +5508,36 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
   } else {
 
   }
+
 # 838 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-  ldv_mutex_lock_6(& dev->lock);
+  // Peter
+  //  ldv_mutex_lock_6(& dev->lock); // remove lock
 # 840 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   if ((unsigned int )dev->driver_type == 0U) {
+
 # 841 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     enabled = (u64 )dev->rc_map.rc_type;
 # 842 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     allowed = dev->allowed_protos;
+
   } else
+  
 # 843 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   if ((unsigned long )dev->raw != (unsigned long )((struct ir_raw_event_ctrl *)0)) {
 # 844 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     enabled = (dev->raw)->enabled_protocols;
 # 845 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     allowed = ir_raw_get_allowed_protocols();
+
   } else {
 # 847 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
+
+    //Peter
+    assert((unsigned int )dev->driver_type != 0U && (unsigned long )dev->raw == (unsigned long )((struct ir_raw_event_ctrl *)0)); //consistency check
+
     return (-19L);
   }
+
 # 849 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   if (rc_core_debug > 0) {
 # 849 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5601,7 +5613,8 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
 # 865 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   *tmp = 10;
 # 867 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-  ldv_mutex_unlock_7(& dev->lock);
+  // Peter
+  //ldv_mutex_unlock_7(& dev->lock); // remove lock
 # 869 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   return ((long )(tmp + 1UL) - (long )buf);
 }
@@ -5650,8 +5663,10 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
   } else {
 
   }
+
 # 909 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-  ldv_mutex_lock_8(& dev->lock);
+  //Peter
+  //ldv_mutex_lock_8(& dev->lock); // remove lock
 # 911 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   if ((unsigned int )dev->driver_type == 0U) {
 # 912 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5662,6 +5677,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 # 914 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     type = (dev->raw)->enabled_protocols;
   } else {
+    //Peter 
+    dev->driver_type = 1; // this will violate the consistency check
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     if (rc_core_debug > 0) {
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5784,7 +5801,9 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 
     }
 # 947 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-    return (-22L);
+    //return (-22L); //Peter: unwanted bug fixed
+    ret = -22L;
+    goto out;
   } else {
 
   }
@@ -5942,7 +5961,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
   ret = (ssize_t )len;
   out:
 # 990 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-  ldv_mutex_unlock_9(& dev->lock);
+  // Peter
+  // ldv_mutex_unlock_9(& dev->lock); //remove lock
 # 991 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   return (ret);
 }
@@ -6495,20 +6515,18 @@ static void rc_core_exit(void)
 }
 }
 
-
-
-char *ldvarg3;
-struct device *dev_attr_protocols_group0;
-struct kobj_uevent_env *ldvarg0;
-char *ldvarg5;
-struct device *ldvarg1;
-int ldv_retval_0;
-size_t ldvarg4;
+char *ldvarg3 = nondet_chars();
+struct device *dev_attr_protocols_group0 = nondet_device();
+struct kobj_uevent_env *ldvarg0 = nondet_kobj_uevent_env();
+char *ldvarg5 = nondet_charptr();
+struct device *ldvarg1 = nondet_device();
+int ldv_retval_0 = nondet_int();
+size_t ldvarg4 = nondet_sizet();
 void ldv_initialize(void);
-struct device_attribute *dev_attr_protocols_group1;
+struct device_attribute *dev_attr_protocols_group1 = nondet_device_attribute();
 void ldv_check_final_state(void);
-struct device *rc_dev_type_group0;
-umode_t *ldvarg2;
+struct device *rc_dev_type_group0 = nondet_device();
+umode_t *ldvarg2 = nondet_umode_t();
 int ldv_rc_dev_type_probe_1(void);
 
 # 1 "/usr/include/pthread.h" 1 3 4
@@ -7843,6 +7861,7 @@ void entry_point(void){
   goto ldv_exit;
  }
 
+ /*
  dev_attr_protocols_group0 = kmalloc(sizeof(struct device), 208U);
  pthread_t ir_devnode_ldvthread;
  pthread_create(&ir_devnode_ldvthread, ((void *)0), ir_devnode_ldvwrapper, ((void *)0));
@@ -7852,8 +7871,8 @@ void entry_point(void){
 
  pthread_t show_protocols_ldvthread;
  pthread_create(&show_protocols_ldvthread, ((void *)0), show_protocols_ldvwrapper, ((void *)0));
+ */
 
-/*
 __CPROVER_ASYNC_1:
 ir_devnode_ldvwrapper();
 
@@ -7862,9 +7881,9 @@ store_protocols_ldvwrapper();
 
 __CPROVER_ASYNC_1:
 show_protocols_ldvwrapper();
-*/
 
- ldv_rc_dev_type_probe_1();
+
+// ldv_rc_dev_type_probe_1();
 
 /*
 __CPROVER_ASYNC_1:
@@ -7873,7 +7892,7 @@ rc_dev_uevent_ldvwrapper();
 __CPROVER_ASYNC_1:
 rc_dev_release_ldvwrapper();
 */
-
+/*
  pthread_t rc_dev_uevent_ldvthread;
  pthread_create(&rc_dev_uevent_ldvthread, ((void *)0), rc_dev_uevent_ldvwrapper, ((void *)0));
 
@@ -7885,12 +7904,13 @@ rc_dev_release_ldvwrapper();
  pthread_join(store_protocols_ldvthread, ((void *)0));
  pthread_join(show_protocols_ldvthread, ((void *)0));
  pthread_join(rc_dev_uevent_ldvthread, ((void *)0));
-
+*/
  ldv_exit:
 
  rc_core_exit();
 
  ldv_final:
+
  return;
 }
 # 1449 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
