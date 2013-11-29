@@ -23,8 +23,7 @@
 #include "brake_acc_nodiv_data.c" //Peter
 
 //Lihao
-int test_i = 0;
-const int __CPROVER_thread_priorities[] = {5, 5, 5, 5, 2};
+const int __CPROVER_thread_priorities[] = {5, 5, 5, 5, 22};
 const char* __CPROVER_threads[] = {"c::task_RR_Wheel", "c::task_FR_Wheel",
 "c::task_FL_Wheel", "c::task_RL_Wheel", "c::task_compute"};
 
@@ -64,8 +63,6 @@ void schedule_irq(void) {
     }
   }
 }
-
-
 // Peter: shared variables to communicate requested torque to wheel threads
 real_T rtb_RR;
 real_T rtb_FL;
@@ -522,10 +519,8 @@ static void brake_acc_nodiv_update(int_T tid)
 // Lihao
 void task_RR_Wheel(void)
 {
-// test
-test_i = 56;
-
   /* Outputs for Atomic SubSystem: '<S30>/RL_Wheel' */
+schedule_irq();
   brake_acc_nodiv_FL_Wheel(brake_acc_nodiv_B.Saturation, rtb_RR,
     &brake_acc_nodiv_B.RR_Wheel, &brake_acc_nodiv_DWork.RR_Wheel,
     (rtP_FL_Wheel_brake_acc_nodiv *) &brake_acc_nodiv_P.RR_Wheel);
@@ -636,12 +631,10 @@ void task_compute(void)
     brake_acc_nodiv_P.LookUpTable1_YData);
 
   /* Saturate: '<S9>/Pedal_map' */
-schedule_irq();
   brake_acc_nodiv_B.Pedal_map = rtb_LookUpTable1 >=
     brake_acc_nodiv_P.Pedal_map_UpperSat ? brake_acc_nodiv_P.Pedal_map_UpperSat :
     rtb_LookUpTable1 <= brake_acc_nodiv_P.Pedal_map_LowerSat ?
     brake_acc_nodiv_P.Pedal_map_LowerSat : rtb_LookUpTable1;
-schedule_irq();
 
   /* Rounding: '<S19>/to_int' */
   rtb_to_int = rt_roundd_snf(brake_acc_nodiv_B.Pedal_map);
@@ -660,14 +653,10 @@ schedule_irq();
    */
   if (brake_acc_nodiv_B.ABS_RR_Wheel.Threshold_10kmh >
       brake_acc_nodiv_P.RR_Threshold) {
-schedule_irq();
-  rtb_RR = brake_acc_nodiv_P.negative_Gain *
+    rtb_RR = brake_acc_nodiv_P.negative_Gain *
       brake_acc_nodiv_B.ABS_RR_Wheel.Threshold_10kmh;
-schedule_irq();
   } else {
-schedule_irq();
     rtb_RR = brake_acc_nodiv_P.half_Gain[0] * rtb_to_int;
-schedule_irq();
   }
 
   /* End of Switch: '<S30>/RR' */
@@ -675,8 +664,7 @@ schedule_irq();
   /* Outputs for Atomic SubSystem: '<S30>/Vehicle Model' */
   /* Saturate: '<S39>/Saturation' incorporates:
    *  UnitDelay: '<S39>/Unit Delay'
-   */ 
-schedule_irq();
+   */
   brake_acc_nodiv_B.Saturation = brake_acc_nodiv_DWork.UnitDelay_DSTATE >=
     brake_acc_nodiv_P.Saturation_UpperSat ?
     brake_acc_nodiv_P.Saturation_UpperSat :
@@ -684,7 +672,6 @@ schedule_irq();
     brake_acc_nodiv_P.Saturation_LowerSat ?
     brake_acc_nodiv_P.Saturation_LowerSat :
     brake_acc_nodiv_DWork.UnitDelay_DSTATE;
-schedule_irq();
 
   /* End of Outputs for SubSystem: '<S30>/Vehicle Model' */
 
@@ -758,47 +745,33 @@ schedule_irq();
   /* End of Outputs for SubSystem: '<S30>/RL_Wheel' */
 
   /* Gain: '<S30>/v (km//h)' */
-schedule_irq();
   brake_acc_nodiv_B.vkmh = brake_acc_nodiv_P.vkmh_Gain_j *
     brake_acc_nodiv_B.Saturation;
-schedule_irq();
 
   /* Update for Atomic SubSystem: '<S30>/Vehicle Model' */
   /* Sum: '<S39>/Add' */
-schedule_irq();
   brake_acc_nodiv_B.Add = brake_acc_nodiv_B.RR_Wheel.Product +
       brake_acc_nodiv_B.RL_Wheel.Product + 
       brake_acc_nodiv_B.FR_Wheel.Product + 
       brake_acc_nodiv_B.FL_Wheel.Product;
-schedule_irq();
-
-// test
-test_i = 1;
 
   // Lihao
-  {
     real_T tmp = brake_acc_nodiv_B.RR_Wheel.Product +
       brake_acc_nodiv_B.RL_Wheel.Product + 
       brake_acc_nodiv_B.FR_Wheel.Product + 
       brake_acc_nodiv_B.FL_Wheel.Product;
-// test
-//assert(test_i < 40);
+
     assert(fabs(brake_acc_nodiv_B.Add-tmp)<=0.001);
-  }
 
   /* Gain: '<S39>/sample_time_over_mass' */
-schedule_irq();
   brake_acc_nodiv_B.sample_time_over_mass =
     brake_acc_nodiv_P.sample_time_over_mass_Gain * brake_acc_nodiv_B.Add;
-schedule_irq();
 
   /* Update for UnitDelay: '<S39>/Unit Delay' incorporates:
    *  Sum: '<S39>/Sum'
    */
-schedule_irq();
   brake_acc_nodiv_DWork.UnitDelay_DSTATE =
     brake_acc_nodiv_B.sample_time_over_mass + brake_acc_nodiv_B.Saturation;
-schedule_irq();
 
   /* End of Update for SubSystem: '<S30>/Vehicle Model' */
 
@@ -837,11 +810,9 @@ schedule_irq();
    *  Gain: '<S29>/w (grad//s)'
    *  Sum: '<S29>/Add'
    */
-schedule_irq();
   brake_acc_nodiv_B.vkmh_f = (((rtb_to_int_o + rtb_to_int_g) + rtb_to_int_a) +
     rtb_to_int1) * brake_acc_nodiv_P.average_rpm_Gain *
     brake_acc_nodiv_P.wgrads_Gain * brake_acc_nodiv_P.vkmh_Gain;
-schedule_irq();
 
   /* Clock: '<S7>/Clock' */
   rtb_LookUpTable1 = brake_acc_nodiv_M->Timing.t[0];
@@ -863,13 +834,11 @@ schedule_irq();
     brake_acc_nodiv_P.LookUpTable1_YData_m);
 
   /* Saturate: '<S10>/Pedal_map' */
-schedule_irq();
   brake_acc_nodiv_B.Pedal_map_f = rtb_LookUpTable1 >=
     brake_acc_nodiv_P.Pedal_map_UpperSat_i ?
     brake_acc_nodiv_P.Pedal_map_UpperSat_i : rtb_LookUpTable1 <=
     brake_acc_nodiv_P.Pedal_map_LowerSat_h ?
     brake_acc_nodiv_P.Pedal_map_LowerSat_h : rtb_LookUpTable1;
-schedule_irq();
 
   /* S-Function (fcncallgen): '<Root>/10ms' incorporates:
    *  SubSystem: '<Root>/Brake_Torq_Calculation'
@@ -900,19 +869,14 @@ schedule_irq();
    *  SubSystem: '<Root>/Global Brake Controller'
    */
   /* Gain: '<S8>/Distribution' */
-schedule_irq();
   brake_acc_nodiv_B.Distribution[0] = brake_acc_nodiv_P.Distribution_Gain[0] *
     rtb_to_int;
-schedule_irq();
   brake_acc_nodiv_B.Distribution[1] = brake_acc_nodiv_P.Distribution_Gain[1] *
     rtb_to_int;
-schedule_irq();
   brake_acc_nodiv_B.Distribution[2] = brake_acc_nodiv_P.Distribution_Gain[2] *
     rtb_to_int;
-schedule_irq();
   brake_acc_nodiv_B.Distribution[3] = brake_acc_nodiv_P.Distribution_Gain[3] *
     rtb_to_int;
-schedule_irq();
 
   /* Rounding: '<S14>/to_int' */
   rtb_to_int_a = rt_roundd_snf(brake_acc_nodiv_B.FR_Wheel.wrpm);
@@ -1148,6 +1112,9 @@ void main(void)
 {
   MdlStart();
 
+schedule_irq();
+
+#if 0
   //  while(1) {
     // Lihao
     __CPROVER_ASYNC_1:
@@ -1161,6 +1128,7 @@ void main(void)
     __CPROVER_ASYNC_1:
     task_compute();
   //  }
+#endif
 
   MdlTerminate();
 }

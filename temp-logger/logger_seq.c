@@ -34,6 +34,7 @@ uint8_t systemState;
 #define CMD_READ_DATA 4
 
 // Lihao
+#define assert(e) if (!(e)) ERROR: goto ERROR;
 const int __CPROVER_thread_priorities[] = {5, 2};
 const char* __CPROVER_threads[] = {"c::task_communicate", "c::task_measure"};
 
@@ -193,6 +194,8 @@ void run(void)
 }
 
 void main() {
-    initialize();
-    run();
+  initialize();
+  // Lihao
+  //run();
+  schedule_irq();
 }
