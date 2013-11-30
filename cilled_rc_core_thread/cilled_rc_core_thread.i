@@ -5535,7 +5535,8 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
 # 847 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
 
    //Peter
-    if(test_bug==0) assert(test_bug==0);
+   if(test_bug==0) assert(test_bug==0);
+   // uncomment this line to introduce a bug in the device struct
    //    assert((unsigned int )dev->driver_type != 0U && (unsigned long )dev->raw == (unsigned long )((struct ir_raw_event_ctrl *)0)); //consistency check
 
     return (-19L);
@@ -5681,7 +5682,10 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 # 914 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     type = (dev->raw)->enabled_protocols;
   } else {
+     // Lihao
+     test_bug=1;
     //Peter
+    // uncomment this line to introduce a bug in the device struct
     //dev->driver_type = RC_DRIVER_SCANCODE; // this will violate the consistency check
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     if (rc_core_debug > 0) {
@@ -5965,8 +5969,6 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
   // Peter
   // ldv_mutex_unlock_9(& dev->lock); //remove lock
 # 991 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
-// Lihao
- test_bug=1;
   return (ret);
 }
 }
