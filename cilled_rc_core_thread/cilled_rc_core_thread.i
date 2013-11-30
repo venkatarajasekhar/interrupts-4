@@ -1101,7 +1101,7 @@ struct device {
    struct device_private *p ;
    struct kobject kobj ;
    char const *init_name ;
-   struct device_type const *type ;
+   struct device_type *type ;
    struct mutex mutex ;
    struct bus_type *bus ;
    struct device_driver *driver ;
@@ -2126,7 +2126,7 @@ struct rc_map_table {
 };
 # 67 "include/media/rc-map.h"
 struct rc_map {
-   struct rc_map_table *scan ;
+   struct rc_map_table *scan;
    unsigned int size ;
    unsigned int len ;
    unsigned int alloc ;
@@ -5449,7 +5449,7 @@ static char *ir_devnode(struct device *dev , umode_t *mode )
   char const *tmp ;
   char *tmp___0 ;
 // Lihao
-//test_bug=2;
+//  test_bug=2;
   {
 # 774 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   tmp = dev_name((struct device const *)dev);
@@ -5520,6 +5520,8 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
 # 842 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     allowed = dev->allowed_protos;
 
+   
+
   } else
   
 # 843 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5532,8 +5534,9 @@ static ssize_t show_protocols(struct device *device , struct device_attribute *m
   } else {
 # 847 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
 
-    //Peter
-    assert((unsigned int )dev->driver_type != 0U && (unsigned long )dev->raw == (unsigned long )((struct ir_raw_event_ctrl *)0)); //consistency check
+   //Peter
+    if(test_bug==0) assert(test_bug==0);
+   //    assert((unsigned int )dev->driver_type != 0U && (unsigned long )dev->raw == (unsigned long )((struct ir_raw_event_ctrl *)0)); //consistency check
 
     return (-19L);
   }
@@ -5664,6 +5667,7 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 
   }
 
+
 # 909 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
   //Peter
   //ldv_mutex_lock_8(& dev->lock); // remove lock
@@ -5677,8 +5681,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 # 914 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     type = (dev->raw)->enabled_protocols;
   } else {
-    //Peter 
-    dev->driver_type = 1; // this will violate the consistency check
+    //Peter
+    //dev->driver_type = RC_DRIVER_SCANCODE; // this will violate the consistency check
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     if (rc_core_debug > 0) {
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5832,9 +5836,6 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
 # 923 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     goto ldv_23469;
   } else {
-// Lihao
-// test_bug=1;
-// assert(test_bug==1);
   }
   ldv_23460: ;
 # 960 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -5964,6 +5965,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
   // Peter
   // ldv_mutex_unlock_9(& dev->lock); //remove lock
 # 991 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
+// Lihao
+ test_bug=1;
   return (ret);
 }
 }
