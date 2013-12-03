@@ -5687,7 +5687,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
      //test_bug=1;
     //Peter
     // uncomment this line to introduce a bug in the device struct
-    dev->driver_type = RC_DRIVER_SCANCODE; // this will violate the consistency check
+    dev->raw = 0; // this will violate the consistency check
+    //dev->driver_type = RC_DRIVER_SCANCODE; // this will violate the consistency check
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     if (rc_core_debug > 0) {
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
@@ -6522,7 +6523,7 @@ static void rc_core_exit(void)
 }
 
 char *ldvarg3 = nondet_chars();
-struct device *dev_attr_protocols_group0 = nondet_device();
+struct rc_dev dev_attr_protocols_group0;
 struct kobj_uevent_env *ldvarg0 = nondet_kobj_uevent_env();
 char *ldvarg5 = nondet_charptr();
 struct device *ldvarg1 = nondet_device();
@@ -7838,11 +7839,11 @@ void *ir_devnode_ldvwrapper(void){
 }
 
 void *store_protocols_ldvwrapper(void){
- (& store_protocols)(dev_attr_protocols_group0,dev_attr_protocols_group1,ldvarg5,ldvarg4);
+ (& store_protocols)(&dev_attr_protocols_group0,dev_attr_protocols_group1,ldvarg5,ldvarg4);
 }
 
 void *show_protocols_ldvwrapper(void){
- (& show_protocols)(dev_attr_protocols_group0,dev_attr_protocols_group1,ldvarg3);
+ (& show_protocols)(&dev_attr_protocols_group0,dev_attr_protocols_group1,ldvarg3);
 }
 
 void *rc_dev_uevent_ldvwrapper(void){
@@ -7858,6 +7859,9 @@ const int __CPROVER_thread_priorities[] = {1, 2, 55, 22, 142, 43};
 const char* __CPROVER_threads[] = {"c::entry_point", "c::store_protocols_ldvwrapper","c::rc_dev_uevent_ldvwrapper", "c::ir_devnode_ldvwrapper", "c::rc_dev_release_ldvwrapper", "c::show_protocols_ldvwrapper"};
 
 void entry_point(void){
+ rc_dev s;
+ dev_attr_protocols_group0 = s;
+
  ldv_initialize();
 
  ldv_retval_0=rc_core_init();
