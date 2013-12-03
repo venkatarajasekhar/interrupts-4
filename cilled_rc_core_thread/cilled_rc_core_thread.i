@@ -7859,7 +7859,7 @@ const int __CPROVER_thread_priorities[] = {1, 2, 55, 22, 142, 43};
 const char* __CPROVER_threads[] = {"c::entry_point", "c::store_protocols_ldvwrapper","c::rc_dev_uevent_ldvwrapper", "c::ir_devnode_ldvwrapper", "c::rc_dev_release_ldvwrapper", "c::show_protocols_ldvwrapper"};
 
 void entry_point(void){
- rc_dev s;
+ struct rc_dev s;
  dev_attr_protocols_group0 = s;
 
  ldv_initialize();
