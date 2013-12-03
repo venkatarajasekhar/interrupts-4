@@ -5687,7 +5687,8 @@ static ssize_t store_protocols(struct device *device , struct device_attribute *
      //test_bug=1;
     //Peter
     // uncomment this line to introduce a bug in the device struct
-    dev->raw = 0; // this will violate the consistency check
+    struct ir_raw_event_ctrl r;
+    dev->raw = &r; // this will violate the consistency check
     //dev->driver_type = RC_DRIVER_SCANCODE; // this will violate the consistency check
 # 916 "/work/zakharov/bench-tests/cpa-1/work/current--X--drivers/media/rc/rc-core.ko--X--deg2_cpalinux-3.8-rc1--X--32_7a--X--cpachecker/linux-3.8-rc1/csd_deg_dscv/13/dscv_tempdir/dscv/ri/32_7a/drivers/media/rc/rc-main.c.prepared"
     if (rc_core_debug > 0) {
