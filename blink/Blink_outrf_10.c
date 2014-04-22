@@ -3379,13 +3379,17 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
 {
   /* IRQ INSTR 19 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+
+//  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start(); //Peter: we use priorities to implement atomic section
 {
   TransformAlarmC_0_m_t0 = t0;
   TransformAlarmC_0_m_dt = dt;
   TransformAlarmC_0_set_alarm();
+
+  assert(TransformAlarmC_0_m_t0==to && 
+         TransformAlarmC_0_m_dt==dt);
 }
-  __nesc_atomic_end(__nesc_atomic);
+//  __nesc_atomic_end(__nesc_atomic); //Peter: we use priorities to implement atomic section
 }
 }
 
