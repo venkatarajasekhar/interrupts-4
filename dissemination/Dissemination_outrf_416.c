@@ -1,5 +1,7 @@
 #include "msp430_hw.h"
-//#include "lib/libc_string.h"
+//#include "lib/libc_string.h" // Lihao
+
+int test; // Lihao
 
 extern nondet_bv();
 
@@ -10733,6 +10735,7 @@ static inline void CC2420CsmaP_SplitControl_stopDone(error_t error)
 inline static void CC2420CsmaP_stopDone_task_runTask( void ) 
 {
   CC2420CsmaP_SplitControlState_forceState(CC2420CsmaP_S_STOPPED);
+  test = 0; // Lihao
   CC2420CsmaP_SplitControl_stopDone(SUCCESS);
 }
 
@@ -11043,11 +11046,13 @@ static inline error_t CC2420CsmaP_SubControl_start( void )
 
 inline static void CC2420CsmaP_startDone_task_runTask( void ) 
 {
+  test = 1; // Lihao
   CC2420CsmaP_SubControl_start();
   CC2420CsmaP_CC2420Power_rxOn();
   CC2420CsmaP_Resource_release();
   CC2420CsmaP_SplitControlState_forceState(CC2420CsmaP_S_STARTED);
   CC2420CsmaP_SplitControl_startDone(SUCCESS);
+  assert(test == 1); // Lihao
 }
 
 static inline error_t CC2420CsmaP_SplitControlState_requestState(uint8_t reqState) 
@@ -13041,13 +13046,22 @@ static TransformCounterC_1_to_size_type TransformCounterC_1_Counter_get( void )
 }
 
 // Lihao
-void main(void) {
-  RealMainP_Scheduler_init();
-  RealMainP_PlatformInit_init();
-  RealMainP_SoftwareInit_init();
-  RealMainP_Boot_booted();
-  RealMainP_Scheduler_taskLoop();
+const int __CPROVER_thread_priorities[] = {5, 2};
+const char* __CPROVER_threads[] = {"c::CC2420CsmaP_startDone_task_runTask", 
+                                   "c::CC2420CsmaP_stopDone_task_runTask"};
 
+void main(void) {
+  //RealMainP_Scheduler_init();
+  RealMainP_PlatformInit_init();
+  //RealMainP_SoftwareInit_init();
+  RealMainP_Boot_booted();
+  //RealMainP_Scheduler_taskLoop();
+
+  // comment 1,3,5 of the above functions
+  // to reach here
+  // assert(0);  
+
+  // same thread spawn issues of CBMC as the Sense benchmark
   __CPROVER_ASYNC_1: 
   CC2420CsmaP_startDone_task_runTask();
   __CPROVER_ASYNC_1: 
@@ -13055,10 +13069,12 @@ void main(void) {
   //__CPROVER_ASYNC_1: 
   //CC2420CsmaP_sendDone_task_runTask(); // better not use; may cause CBMC hang
 
+/*  
   __CPROVER_ASYNC_1: 
   CC2420ControlP_sync_runTask();
   __CPROVER_ASYNC_1: 
   CC2420ControlP_syncDone_runTask();
+*/
   //__CPROVER_ASYNC_1: 
   //CC2420SpiP_grant_runTask(); // better not use; may cause CBMC hang
 

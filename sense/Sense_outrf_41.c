@@ -1,11 +1,14 @@
 #include "msp430_hw.h"
-//#include "lib/libc_string.h"
+//#include "lib/libc_string.h" // Lihao
+//#include <pthread.h> // Lihao
+
+int test; // Lihao
 
 extern nondet_bv();
 
 typedef int ptrdiff_t;
 
-typedef int unsigned size_t;
+typedef int unsigned size_t; // Lihao
 
 typedef int wchar_t;
 
@@ -237,9 +240,9 @@ typedef struct __nesc_unnamed4243 {
   long rem;
 } ldiv_t;
 
-typedef int long __int32_t;
+typedef int long __int32_t; // Lihao
 
-typedef int long unsigned __uint32_t;
+typedef int long unsigned __uint32_t; // Lihao
 
 typedef long _off_t;
 
@@ -1185,7 +1188,8 @@ static void AlarmToTimerC_0_Timer_startOneShotAt(uint32_t t0, uint32_t dt) ;
 
 static void AlarmToTimerC_0_Timer_stop( void ) ;
 
-static void VirtualizeTimerC_0_updateFromTimer_runTask( void ) ;
+static void VirtualizeTimerC_0_updateFromTimer_runTask( void ) ; // Lihao
+//static void *VirtualizeTimerC_0_updateFromTimer_runTask( void *arg ) ;
 
 static void VirtualizeTimerC_0_TimerFrom_fired( void ) ;
 
@@ -1998,6 +2002,7 @@ VirtualizeTimerC_0_Timer_t (VirtualizeTimerC_0_m_timers[VirtualizeTimerC_0_NUM_T
 static void VirtualizeTimerC_0_fireTimers(uint32_t now) ;
 
 inline static void VirtualizeTimerC_0_updateFromTimer_runTask( void ) ;
+//inline static void *VirtualizeTimerC_0_updateFromTimer_runTask( void *arg ) ; // Lihao
 
 inline static void VirtualizeTimerC_0_TimerFrom_fired( void ) ;
 
@@ -4051,17 +4056,18 @@ static inline void AdcStreamP_ReadStream_bufferDone(uint8_t arg_0x1b5f340, error
   ArbitratedReadStreamC_0_Service_bufferDone(arg_0x1b5f340, result, buf, count);
 }
 
-inline static void AdcStreamP_bufferDone_runTask( void ) 
+static void AdcStreamP_bufferDone_runTask( void ) 
 {
   uint16_t *b;
   uint16_t c;
-{
+
+//{
   /* IRQ INSTR 12 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 13 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
-{
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+//{
   /* IRQ INSTR 10 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   b = AdcStreamP_lastBuffer;
@@ -4069,9 +4075,10 @@ inline static void AdcStreamP_bufferDone_runTask( void )
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   c = AdcStreamP_lastCount;
   AdcStreamP_lastBuffer = _IE1;
-}
-  __nesc_atomic_end(__nesc_atomic);
-}
+//}
+  //___nesc_atomic_end(__nesc_atomic);
+//}
+
   /* IRQ INSTR 14 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   AdcStreamP_ReadStream_bufferDone(AdcStreamP_client, SUCCESS, b, c);
@@ -4118,41 +4125,45 @@ static inline void AdcStreamP_ReadStream_readDone(uint8_t arg_0x1b5f340, error_t
   ArbitratedReadStreamC_0_Service_readDone(arg_0x1b5f340, result, usActualPeriod);
 }
 
-inline static void AdcStreamP_readStreamFail_runTask( void ) 
+//inline static void AdcStreamP_readStreamFail_runTask( void ) 
+static void AdcStreamP_readStreamFail_runTask( void ) 
 {
   struct AdcStreamP_list_entry_t  *entry;
   /* IRQ INSTR 20 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   uint8_t c = AdcStreamP_client;
-{
+//{
   /* IRQ INSTR 16 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 17 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   /* IRQ INSTR 15 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   entry = AdcStreamP_bufferQueue[c];
-  __nesc_atomic_end(__nesc_atomic);
-}
+  //___nesc_atomic_end(__nesc_atomic);
+//}
   for(; entry; entry = entry->next)
   {
     uint16_t tmp_count = entry->count;
     AdcStreamP_ReadStream_bufferDone(c, FAIL, ( uint16_t * )(entry), entry->count);
   }
 
-{
+//{
   /* IRQ INSTR 18 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 19 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
-{
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+//{
   AdcStreamP_bufferQueue[c] = _IE1;
   AdcStreamP_bufferQueueEnd[c] = &AdcStreamP_bufferQueue[c];
-}
-  __nesc_atomic_end(__nesc_atomic);
-}
+//}
+  //___nesc_atomic_end(__nesc_atomic);
+//}
+
+  test = 0; // Lihao
+
   AdcStreamP_client = AdcStreamP_NSTREAM;
   AdcStreamP_ReadStream_readDone(c, FAIL, 0);
 }
@@ -4269,28 +4280,35 @@ static inline void SimpleArbiterP_0_ResourceConfigure_unconfigure(uint8_t arg_0x
   SimpleArbiterP_0_ResourceConfigure_default_unconfigure(arg_0x1a7f030);
 }
 
-inline static void AdcStreamP_readStreamDone_runTask( void ) 
+//inline static void AdcStreamP_readStreamDone_runTask( void ) 
+static void AdcStreamP_readStreamDone_runTask( void ) 
 {
   /* IRQ INSTR 23 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   uint8_t c = AdcStreamP_client;
   uint32_t actualPeriod = AdcStreamP_period;
+ 
+  test = 1; // Lihao
+
   if(AdcStreamP_periodModified)
   {
     actualPeriod = AdcStreamP_period - (AdcStreamP_period % 1000);
   }
-{
+//{
   /* IRQ INSTR 21 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 22 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
-{
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+//{
   AdcStreamP_bufferQueue[c] = _IE1;
   AdcStreamP_bufferQueueEnd[c] = &AdcStreamP_bufferQueue[c];
-}
-  __nesc_atomic_end(__nesc_atomic);
-}
+//}
+  //___nesc_atomic_end(__nesc_atomic);
+//}
+
+  assert(test == 1);
+
   AdcStreamP_client = AdcStreamP_NSTREAM;
   AdcStreamP_ReadStream_readDone(c, SUCCESS, actualPeriod);
 }
@@ -4509,12 +4527,12 @@ inline static void SimpleArbiterP_0_grantedTask_runTask( void )
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 25 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   SimpleArbiterP_0_resId = SimpleArbiterP_0_reqResId;
   SimpleArbiterP_0_state = SimpleArbiterP_0_RES_BUSY;
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   SimpleArbiterP_0_ResourceConfigure_configure(SimpleArbiterP_0_resId);
   SimpleArbiterP_0_Resource_granted(SimpleArbiterP_0_resId);
@@ -5023,13 +5041,13 @@ inline static error_t Msp430Adc12ImplP_SingleChannel_configureMultiple(uint8_t i
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 27 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(Msp430Adc12ImplP_state & Msp430Adc12ImplP_ADC_BUSY)
   {
     char unsigned __nesc_temp = EBUSY;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -5064,7 +5082,7 @@ inline static error_t Msp430Adc12ImplP_SingleChannel_configureMultiple(uint8_t i
     result = SUCCESS;
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   return result;
 }
@@ -5101,14 +5119,14 @@ inline static error_t AdcStreamP_postBuffer(uint8_t c, uint16_t *buf, uint16_t n
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 29 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   struct AdcStreamP_list_entry_t  *newEntry = ( struct AdcStreamP_list_entry_t * )(buf);
   if(!AdcStreamP_bufferQueueEnd[c])
   {
     char unsigned __nesc_temp = FAIL;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -5117,7 +5135,7 @@ inline static error_t AdcStreamP_postBuffer(uint8_t c, uint16_t *buf, uint16_t n
   *AdcStreamP_bufferQueueEnd[c] = newEntry;
   AdcStreamP_bufferQueueEnd[c] = &newEntry->next;
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   return SUCCESS;
 }
@@ -5156,9 +5174,9 @@ static inline error_t AdcP_SingleChannel_getData(uint8_t arg_0x191ee60)
 inline static void HplMsp430GeneralIOP_38_IO_clr( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT &= ~0x01 << 6;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -5200,9 +5218,9 @@ static inline void SenseC_Leds_led2Off( void )
 inline static void HplMsp430GeneralIOP_37_IO_clr( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT &= ~0x01 << 5;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -5244,9 +5262,9 @@ static inline void SenseC_Leds_led1Off( void )
 inline static void HplMsp430GeneralIOP_36_IO_clr( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT &= ~0x01 << 4;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -5434,6 +5452,7 @@ static inline void VirtualizeTimerC_0_TimerFrom_stop( void )
 }
 
 inline static void VirtualizeTimerC_0_updateFromTimer_runTask( void ) 
+//inline static void *VirtualizeTimerC_0_updateFromTimer_runTask( void *arg ) 
 {
   uint32_t now = VirtualizeTimerC_0_TimerFrom_getNow();
   int32_t min_remaining = (1UL << 31) - 1;
@@ -5451,9 +5470,11 @@ inline static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
       {
         min_remaining = remaining;
         min_remaining_isset = TRUE;
+        test = 0; // Lihao
       }
     }
   }
+  assert(0); // Lihao: unreachable
 
   if(min_remaining_isset)
   {
@@ -5635,17 +5656,17 @@ inline static TransformAlarmC_0_to_size_type TransformAlarmC_0_Alarm_getAlarm( v
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 32 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   /* IRQ INSTR 30 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
   TransformAlarmC_0_to_size_type __nesc_temp = TransformAlarmC_0_m_t0 + TransformAlarmC_0_m_dt;
 {
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
   return __nesc_temp;
 }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -5657,12 +5678,15 @@ static inline AlarmToTimerC_0_Alarm_size_type AlarmToTimerC_0_Alarm_getAlarm( vo
 }
 
 inline static void AlarmToTimerC_0_fired_runTask( void ) 
+//inline static void *AlarmToTimerC_0_fired_runTask( void *arg) 
 {
+  test = 1; // Lihao
   if(AlarmToTimerC_0_m_oneshot == FALSE)
   {
     AlarmToTimerC_0_start(AlarmToTimerC_0_Alarm_getAlarm(), AlarmToTimerC_0_m_dt, FALSE);
   }
   AlarmToTimerC_0_Timer_fired();
+  assert(test == 1); // Lihao
 }
 
 inline static error_t ecombine(error_t r1, error_t r2) 
@@ -5884,14 +5908,14 @@ inline static void SchedulerBasicP_Scheduler_taskLoop( void )
     if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 42 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-    __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+    //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   {
     while((nextTask = SchedulerBasicP_popTask()) == (SchedulerBasicP_NO_TASK))
     {
       SchedulerBasicP_McuSleep_sleep();
     }
   }
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
   }
     SchedulerBasicP_TaskBasic_runTask(nextTask);
   }
@@ -6254,14 +6278,16 @@ static inline error_t AdcStreamP_bufferDone_postTask( void )
   return result;
 }
 
-__nesc_atomic_t __nesc_atomic_start( void ) 
+/*
+___nesc_atomic_t __nesc_atomic_start( void ) 
 {
   __nesc_atomic_t result = (_R2 & 0x0008) != 0;
   __nesc_disable_interrupt();
   return result;
 }
+*/
 
-void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) 
+void ___nesc_atomic_end(__nesc_atomic_t reenable_interrupts) 
 {
   if(reenable_interrupts)
   {
@@ -6321,17 +6347,17 @@ static error_t SchedulerBasicP_TaskBasic_postTask(uint8_t id)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 44 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
 {
   char unsigned __nesc_temp = SchedulerBasicP_pushTask(id)? SUCCESS : EBUSY;
 {
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
   return __nesc_temp;
 }
 }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -6388,7 +6414,7 @@ static TransformCounterC_0_to_size_type TransformCounterC_0_Counter_get( void )
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 51 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   TransformCounterC_0_upper_count_type high = TransformCounterC_0_m_upper;
   TransformCounterC_0_from_size_type low = TransformCounterC_0_CounterFrom_get();
@@ -6403,7 +6429,7 @@ static TransformCounterC_0_to_size_type TransformCounterC_0_Counter_get( void )
   rv = (high_to << TransformCounterC_0_HIGH_SHIFT_LEFT) | low_to;
 }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   return rv;
 }
@@ -6442,7 +6468,7 @@ static error_t Msp430Adc12ImplP_SingleChannel_getData(uint8_t id)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 53 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(Msp430Adc12ImplP_ADCArbiterInfo_userId() == id)
   {
@@ -6450,7 +6476,7 @@ static error_t Msp430Adc12ImplP_SingleChannel_getData(uint8_t id)
     {
       char unsigned __nesc_temp = EINVAL;
     {
-      __nesc_atomic_end(__nesc_atomic);
+      //___nesc_atomic_end(__nesc_atomic);
       return __nesc_temp;
     }
     }
@@ -6458,7 +6484,7 @@ static error_t Msp430Adc12ImplP_SingleChannel_getData(uint8_t id)
     {
       char unsigned __nesc_temp = EBUSY;
     {
-      __nesc_atomic_end(__nesc_atomic);
+      //___nesc_atomic_end(__nesc_atomic);
       return __nesc_temp;
     }
     }
@@ -6473,13 +6499,13 @@ static error_t Msp430Adc12ImplP_SingleChannel_getData(uint8_t id)
   {
     char unsigned __nesc_temp = SUCCESS;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   return FAIL;
 }
@@ -6569,29 +6595,70 @@ static void TransformAlarmC_1_set_alarm( void )
 }
 
 // Lihao
+/*
+const int __CPROVER_thread_priorities[] = {5, 2};
+const char* __CPROVER_threads[] = {"c::AlarmToTimerC_0_fired_runTask", 
+                                   "c::VirtualizeTimerC_0_updateFromTimer_runTask"};
+*/
+
+/*
+const int __CPROVER_thread_priorities[] = {5, 2, 8};
+const char* __CPROVER_threads[] = {"c::AdcStreamP_readStreamDone_runTask",
+                                   "c::AdcStreamP_readStreamFail_runTask",
+                                   "c::AdcStreamP_bufferDone_runTask"}; 
+*/
+
+/*
+const int __CPROVER_thread_priorities[] = {5, 2, 8};
+const char* __CPROVER_threads[] = {"c::AdcP_readDone_runTask",
+                                   "c::SimpleArbiterP_0_grantedTask_runTask",
+                                   "c::Msp430RefVoltArbiterImplP_switchOff_runTask"}; 
+*/
+
 void main(void) {
-  RealMainP_Scheduler_init();
+  //RealMainP_Scheduler_init();
   RealMainP_PlatformInit_init();
-  RealMainP_SoftwareInit_init();
+  RealMainP_SoftwareInit_init();  
+  // Lihao: unwind twice to reach here
   __nesc_enable_interrupt();
   RealMainP_Boot_booted();
 
+// CBMC has strange behaviours when spawning threads in this benchmark
+// so threads cannot pick up the correct prioirties 
+
+/*
+  pthread_t t1, t2;
+  pthread_create(&t1, NULL, AlarmToTimerC_0_fired_runTask, NULL);
+  pthread_create(&t2, NULL, VirtualizeTimerC_0_updateFromTimer_runTask, NULL);
+*/
+
+  // same timer tasks as the blink benchmark
+/*
   __CPROVER_ASYNC_1:
   AlarmToTimerC_0_fired_runTask();
   __CPROVER_ASYNC_1:
   VirtualizeTimerC_0_updateFromTimer_runTask();
+*/
+  
+/*
+  // the following three seem not to be related to each other
   __CPROVER_ASYNC_1:
   AdcP_readDone_runTask();
   __CPROVER_ASYNC_1:
   SimpleArbiterP_0_grantedTask_runTask();
   __CPROVER_ASYNC_1:
   Msp430RefVoltArbiterImplP_switchOff_runTask();
+*/
+
+/*
+  // strange behaviour, should not try
   __CPROVER_ASYNC_1:
   AdcStreamP_readStreamDone_runTask();
   __CPROVER_ASYNC_1:
   AdcStreamP_readStreamFail_runTask();
   __CPROVER_ASYNC_1:
   AdcStreamP_bufferDone_runTask();
+*/
 }
 
 #if 0
@@ -6602,7 +6669,7 @@ int main( void )
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 65 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
 {
 }
@@ -6614,7 +6681,7 @@ int main( void )
   while(RealMainP_Scheduler_runNextTask())
   ;
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   __nesc_enable_interrupt();
   RealMainP_Boot_booted();
@@ -6640,27 +6707,27 @@ static void MotePlatformC_TOSH_FLASH_M25P_DP_bit(bool set)
 static void HplMsp430GeneralIOP_36_IO_set( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT |= 0x01 << 4;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
 static void HplMsp430GeneralIOP_37_IO_set( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT |= 0x01 << 5;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
 static void HplMsp430GeneralIOP_38_IO_set( void ) 
 {
 {
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
   _P5OUT |= 0x01 << 6;
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -6690,10 +6757,10 @@ static void SchedulerBasicP_TaskBasic_runTask(uint8_t arg_0x147bb38)
   switch (arg_0x147bb38) 
   {
     case AlarmToTimerC_0_fired:
-      AlarmToTimerC_0_fired_runTask();
+      AlarmToTimerC_0_fired_runTask(); // Lihao
       break;
     case VirtualizeTimerC_0_updateFromTimer:
-      VirtualizeTimerC_0_updateFromTimer_runTask();
+      VirtualizeTimerC_0_updateFromTimer_runTask(); // Lihao
       break;
     case AdcP_readDone:
       AdcP_readDone_runTask();
@@ -6739,7 +6806,7 @@ static error_t SimpleArbiterP_0_Resource_release(uint8_t id)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 67 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if((SimpleArbiterP_0_state == SimpleArbiterP_0_RES_BUSY) && (SimpleArbiterP_0_resId == id))
   {
@@ -6758,7 +6825,7 @@ static error_t SimpleArbiterP_0_Resource_release(uint8_t id)
     released = TRUE;
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   if(released == TRUE)
   {
@@ -6780,13 +6847,13 @@ static error_t Msp430RefVoltGeneratorP_switchOff( void )
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 69 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(Msp430RefVoltGeneratorP_HplAdc12_isBusy())
   {
     char unsigned __nesc_temp = FAIL;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -6800,13 +6867,13 @@ static error_t Msp430RefVoltGeneratorP_switchOff( void )
   {
     char unsigned __nesc_temp = SUCCESS;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -6862,7 +6929,7 @@ static error_t SimpleArbiterP_0_Resource_request(uint8_t id)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 71 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(SimpleArbiterP_0_state == SimpleArbiterP_0_RES_IDLE)
   {
@@ -6872,7 +6939,7 @@ static error_t SimpleArbiterP_0_Resource_request(uint8_t id)
   {
     char unsigned __nesc_temp = SUCCESS;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -6880,12 +6947,12 @@ static error_t SimpleArbiterP_0_Resource_request(uint8_t id)
 {
   char unsigned __nesc_temp = SimpleArbiterP_0_Queue_enqueue(id);
 {
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
   return __nesc_temp;
 }
 }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -6926,13 +6993,13 @@ static error_t Msp430Adc12ImplP_SingleChannel_configureSingle(uint8_t id, const 
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 73 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(Msp430Adc12ImplP_state & Msp430Adc12ImplP_ADC_BUSY)
   {
     char unsigned __nesc_temp = EBUSY;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -6952,7 +7019,7 @@ static error_t Msp430Adc12ImplP_SingleChannel_configureSingle(uint8_t id, const 
     result = SUCCESS;
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
   return result;
 }
@@ -6988,7 +7055,7 @@ static error_t AdcStreamP_nextBuffer(bool startNextAlarm)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 77 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   /* IRQ INSTR 75 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
@@ -7000,7 +7067,7 @@ static error_t AdcStreamP_nextBuffer(bool startNextAlarm)
   {
     char unsigned __nesc_temp = FAIL;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -7026,13 +7093,13 @@ static error_t AdcStreamP_nextBuffer(bool startNextAlarm)
   {
     char unsigned __nesc_temp = SUCCESS;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -7112,13 +7179,13 @@ static error_t Msp430RefVoltGeneratorP_switchOn(uint8_t level)
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 81 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   if(Msp430RefVoltGeneratorP_HplAdc12_isBusy())
   {
     char unsigned __nesc_temp = FAIL;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
@@ -7140,13 +7207,13 @@ static error_t Msp430RefVoltGeneratorP_switchOn(uint8_t level)
   {
     char unsigned __nesc_temp = SUCCESS;
   {
-    __nesc_atomic_end(__nesc_atomic);
+    //___nesc_atomic_end(__nesc_atomic);
     return __nesc_temp;
   }
   }
   }
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 
@@ -7198,13 +7265,13 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_ADC_VECTOR(); _R2 |= 0x0008; }
   /* IRQ INSTR 83 */
 //  if ((_R2 & 0x0008) != 0x0000) { _R2 &= 0xfff7; sig_TIMERB0_VECTOR(); _R2 |= 0x0008; }
-  __nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
+  //___nesc_atomic_t __nesc_atomic = __nesc_atomic_start();
 {
   TransformAlarmC_0_m_t0 = t0;
   TransformAlarmC_0_m_dt = dt;
   TransformAlarmC_0_set_alarm();
 }
-  __nesc_atomic_end(__nesc_atomic);
+  //___nesc_atomic_end(__nesc_atomic);
 }
 }
 

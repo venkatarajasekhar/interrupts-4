@@ -1,6 +1,8 @@
 #include "msp430_hw.h"
 //#include "lib/libc_string.h"
 
+int test; // Lihao
+
 extern nondet_bv();
 
 typedef int ptrdiff_t;
@@ -3232,8 +3234,12 @@ static uint16_t Msp430TimerP_1_Timer_get( void )
 }
 
 // Lihao
+const int __CPROVER_thread_priorities[] = {5, 2};
+const char* __CPROVER_threads[] = {"c::AlarmToTimerC_0_fired_runTask", 
+                                   "c::VirtualizeTimerC_0_updateFromTimer_runTask"};
+
 void main(void) {
-  RealMainP_Scheduler_init();
+  //RealMainP_Scheduler_init();
   RealMainP_PlatformInit_init();
   RealMainP_SoftwareInit_init();
   __nesc_enable_interrupt();
@@ -3321,9 +3327,11 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
       {
         min_remaining = remaining;
         min_remaining_isset = TRUE;
+        test = 0; // Lihao
       }
     }
   }
+  assert(0); // Lihao: unreachable 
 
   if(min_remaining_isset)
   {
@@ -3383,11 +3391,14 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
 
 static void AlarmToTimerC_0_fired_runTask( void ) 
 {
+  test = 1; // Lihao
   if(AlarmToTimerC_0_m_oneshot == FALSE)
   {
     AlarmToTimerC_0_start(AlarmToTimerC_0_Alarm_getAlarm(), AlarmToTimerC_0_m_dt, FALSE);
+    assert(test == 1); // Lihao
   }
   AlarmToTimerC_0_Timer_fired();
+  assert(0); // Lihao: unreachable
 }
 
 static void VirtualizeTimerC_0_Timer_startPeriodic(uint8_t num, uint32_t dt) 
