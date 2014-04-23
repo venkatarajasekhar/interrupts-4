@@ -1,8 +1,6 @@
 #include "msp430_hw.h"
 //#include "lib/libc_string.h"
 
-int test; // Lihao
-
 extern nondet_bv();
 
 typedef int ptrdiff_t;
@@ -2761,7 +2759,7 @@ static inline void AlarmToTimerC_0_Alarm_startAt(AlarmToTimerC_0_Alarm_size_type
   TransformAlarmC_0_Alarm_startAt(t0, dt);
 }
 
-inline static void AlarmToTimerC_0_start(uint32_t t0, uint32_t dt, bool oneshot) 
+inline static void AlarmToTimerC_0_start(uint32_t t0, uint32_t dt, bool oneshot)
 {
   AlarmToTimerC_0_m_dt = dt;
   AlarmToTimerC_0_m_oneshot = oneshot;
@@ -3329,8 +3327,10 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
   for(num = 0; num < VirtualizeTimerC_0_NUM_TIMERS; num++)
   {
     VirtualizeTimerC_0_Timer_t *timer = &VirtualizeTimerC_0_m_timers[num];
-    if(timer->isrunning)
+    bool isrunning = timer->isrunning;
+    if(isrunning)
     {
+      timer->isrunning = TRUE; //Peter: this will cause the bug
       uint32_t elapsed = now - timer->t0;
       int32_t remaining = timer->dt - elapsed;
       if(remaining < min_remaining)
@@ -3372,6 +3372,7 @@ static void VirtualizeTimerC_0_fireTimers(uint32_t now)
         if(timer->isoneshot)
         {
           timer->isrunning = FALSE;
+          assert(timer->isrunning == FALSE); //Peter
         }
         else 
         {
@@ -3397,8 +3398,8 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
   TransformAlarmC_0_m_t0 = t0;
   TransformAlarmC_0_m_dt = dt;
 
-  assert(TransformAlarmC_0_m_t0==t0 && 
-         TransformAlarmC_0_m_dt==dt); //Peter
+  //assert(TransformAlarmC_0_m_t0==t0 && 
+  //       TransformAlarmC_0_m_dt==dt); //Peter
 
   TransformAlarmC_0_set_alarm();
 }
