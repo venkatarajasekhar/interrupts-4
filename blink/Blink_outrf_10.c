@@ -3420,5 +3420,6 @@ static void AlarmToTimerC_0_fired_runTask( void )
 
 static void VirtualizeTimerC_0_Timer_startPeriodic(uint8_t num, uint32_t dt) 
 {
-  VirtualizeTimerC_0_startTimer(num, VirtualizeTimerC_0_TimerFrom_getNow(), dt, FALSE);
+  bool oneshot; // = FALSE;
+  VirtualizeTimerC_0_startTimer(num, VirtualizeTimerC_0_TimerFrom_getNow(), dt, oneshot);
 }
