@@ -3247,6 +3247,9 @@ void main(void) {
   __nesc_enable_interrupt();
   RealMainP_Boot_booted();
 
+  unsigned short _tbr;
+  _TBR = _tbr;
+
   //uint32_t now = VirtualizeTimerC_0_TimerFrom_getNow();
   //int32_t min_remaining = (1UL << 31) - 1;
 
