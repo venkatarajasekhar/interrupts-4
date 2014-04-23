@@ -1,6 +1,8 @@
 #include "msp430_hw.h"
 //#include "lib/libc_string.h"
 
+int test; // Lihao
+
 extern nondet_bv();
 
 typedef int ptrdiff_t;
@@ -3233,7 +3235,7 @@ static uint16_t Msp430TimerP_1_Timer_get( void )
 }
 
 // Lihao
-const int __CPROVER_thread_priorities[] = {2, 5};
+const int __CPROVER_thread_priorities[] = {5, 22};
 const char* __CPROVER_threads[] = {"c::AlarmToTimerC_0_fired_runTask", 
                                    "c::VirtualizeTimerC_0_updateFromTimer_runTask"};
 //const char* __CPROVER_threads[] = {"c::sig_TIMERB0_VECTOR", 
@@ -3248,13 +3250,14 @@ void main(void) {
   RealMainP_Boot_booted();
 
   unsigned short _tbr;
-  _TBR = _tbr;
+  _TBR = _tbr; //Peter
 
   //uint32_t now = VirtualizeTimerC_0_TimerFrom_getNow();
   //int32_t min_remaining = (1UL << 31) - 1;
 
   __CPROVER_ASYNC_1:
   AlarmToTimerC_0_fired_runTask(); 
+  //VirtualizeTimerC_0_fireTimers(now);
   //TransformAlarmC_0_AlarmFrom_fired();
   //sig_TIMERB0_VECTOR();
   __CPROVER_ASYNC_1:
@@ -3334,6 +3337,7 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
     if(isrunning)
     {
       timer->isrunning = TRUE; //Peter: this will cause the bug
+      test = 1; // Lihao
       uint32_t elapsed = now - timer->t0;
       int32_t remaining = timer->dt - elapsed;
       if(remaining < min_remaining)
@@ -3370,12 +3374,14 @@ static void VirtualizeTimerC_0_fireTimers(uint32_t now)
     if(timer->isrunning)
     {
       uint32_t elapsed = now - timer->t0;
+      test = 0; assert(test == 0); // Lihao
       if(elapsed >= timer->dt)
       {
         if(timer->isoneshot)
         {
           timer->isrunning = FALSE;
           assert(timer->isrunning == FALSE); //Peter
+          //test = 0; assert(test == 0); // Lihao
         }
         else 
         {
