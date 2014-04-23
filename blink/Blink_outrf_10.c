@@ -1510,7 +1510,8 @@ enum VirtualizeTimerC_0___nesc_unnamed4273 { VirtualizeTimerC_0_updateFromTimer 
 
 typedef int (VirtualizeTimerC_0___nesc_sillytask_updateFromTimer[VirtualizeTimerC_0_updateFromTimer]);
 
-enum VirtualizeTimerC_0___nesc_unnamed4274 { VirtualizeTimerC_0_NUM_TIMERS = 3U, VirtualizeTimerC_0_END_OF_LIST = 255 };
+//enum VirtualizeTimerC_0___nesc_unnamed4274 { VirtualizeTimerC_0_NUM_TIMERS = 3U, VirtualizeTimerC_0_END_OF_LIST = 255 }; // Lihao
+enum VirtualizeTimerC_0___nesc_unnamed4274 { VirtualizeTimerC_0_NUM_TIMERS = 1U, VirtualizeTimerC_0_END_OF_LIST = 255 };
 
 typedef struct VirtualizeTimerC_0___nesc_unnamed4275 {
   uint32_t t0;
@@ -3234,9 +3235,12 @@ static uint16_t Msp430TimerP_1_Timer_get( void )
 }
 
 // Lihao
-const int __CPROVER_thread_priorities[] = {5, 2};
+const int __CPROVER_thread_priorities[] = {2, 5};
 const char* __CPROVER_threads[] = {"c::AlarmToTimerC_0_fired_runTask", 
                                    "c::VirtualizeTimerC_0_updateFromTimer_runTask"};
+//const char* __CPROVER_threads[] = {"c::sig_TIMERB0_VECTOR", 
+//                                   "c::VirtualizeTimerC_0_updateFromTimer_runTask"};
+
 
 void main(void) {
   //RealMainP_Scheduler_init();
@@ -3244,11 +3248,17 @@ void main(void) {
   RealMainP_SoftwareInit_init();
   __nesc_enable_interrupt();
   RealMainP_Boot_booted();
- 
+
+  //uint32_t now = VirtualizeTimerC_0_TimerFrom_getNow();
+  //int32_t min_remaining = (1UL << 31) - 1;
+
   __CPROVER_ASYNC_1:
-  AlarmToTimerC_0_fired_runTask(); //TransformAlarmC_0_AlarmFrom_fired
+  AlarmToTimerC_0_fired_runTask(); 
+  //TransformAlarmC_0_AlarmFrom_fired();
+  //sig_TIMERB0_VECTOR();
   __CPROVER_ASYNC_1:
-  VirtualizeTimerC_0_updateFromTimer_runTask(); //TransformAlarmC_0_Alarm_startAt
+  VirtualizeTimerC_0_updateFromTimer_runTask(); 
+  //TransformAlarmC_0_Alarm_startAt(now, min_remaining);
 }
 
 #if 0
@@ -3327,11 +3337,13 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
       {
         min_remaining = remaining;
         min_remaining_isset = TRUE;
-        test = 0; // Lihao
+        //test = 0; // Lihao
       }
     }
   }
-  assert(0); // Lihao: unreachable 
+
+  // Lihao: unwind loop VirtualizeTimerC_0_NUM_TIMERS+1 times to reach here
+  //assert(0); 
 
   if(min_remaining_isset)
   {
@@ -3384,10 +3396,11 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
 {
   TransformAlarmC_0_m_t0 = t0;
   TransformAlarmC_0_m_dt = dt;
-  TransformAlarmC_0_set_alarm();
 
   assert(TransformAlarmC_0_m_t0==t0 && 
-         TransformAlarmC_0_m_dt==dt);
+         TransformAlarmC_0_m_dt==dt); //Peter
+
+  TransformAlarmC_0_set_alarm();
 }
 //  __nesc_atomic_end(__nesc_atomic); //Peter: we use priorities to implement atomic section
 }
@@ -3395,14 +3408,13 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
 
 static void AlarmToTimerC_0_fired_runTask( void ) 
 {
-  test = 1; // Lihao
+  //test = 1; // Lihao
   if(AlarmToTimerC_0_m_oneshot == FALSE)
   {
     AlarmToTimerC_0_start(AlarmToTimerC_0_Alarm_getAlarm(), AlarmToTimerC_0_m_dt, FALSE);
-    assert(test == 1); // Lihao
+    //assert(test == 1); // Lihao
   }
   AlarmToTimerC_0_Timer_fired();
-  assert(0); // Lihao: unreachable
 }
 
 static void VirtualizeTimerC_0_Timer_startPeriodic(uint8_t num, uint32_t dt) 
