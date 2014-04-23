@@ -3246,9 +3246,9 @@ void main(void) {
   RealMainP_Boot_booted();
  
   __CPROVER_ASYNC_1:
-  AlarmToTimerC_0_fired_runTask();
+  AlarmToTimerC_0_fired_runTask(); //TransformAlarmC_0_AlarmFrom_fired
   __CPROVER_ASYNC_1:
-  VirtualizeTimerC_0_updateFromTimer_runTask();
+  VirtualizeTimerC_0_updateFromTimer_runTask(); //TransformAlarmC_0_Alarm_startAt
 }
 
 #if 0
@@ -3386,7 +3386,7 @@ static void TransformAlarmC_0_Alarm_startAt(TransformAlarmC_0_to_size_type t0, T
   TransformAlarmC_0_m_dt = dt;
   TransformAlarmC_0_set_alarm();
 
-  assert(TransformAlarmC_0_m_t0==to && 
+  assert(TransformAlarmC_0_m_t0==t0 && 
          TransformAlarmC_0_m_dt==dt);
 }
 //  __nesc_atomic_end(__nesc_atomic); //Peter: we use priorities to implement atomic section
