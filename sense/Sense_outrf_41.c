@@ -6632,8 +6632,9 @@ void main(void) {
   pthread_create(&t2, NULL, VirtualizeTimerC_0_updateFromTimer_runTask, NULL);
 */
 
-  // same timer tasks as the blink benchmark
 /*
+  // same timer tasks as the blink benchmark
+  // strange behaviour
   __CPROVER_ASYNC_1:
   AlarmToTimerC_0_fired_runTask();
   __CPROVER_ASYNC_1:
@@ -6641,7 +6642,7 @@ void main(void) {
 */
   
 /*
-  // the following three seem not to be related to each other
+  // strange behaviour
   __CPROVER_ASYNC_1:
   AdcP_readDone_runTask();
   __CPROVER_ASYNC_1:
@@ -6651,7 +6652,7 @@ void main(void) {
 */
 
 /*
-  // strange behaviour, should not try
+  // strange behaviour
   __CPROVER_ASYNC_1:
   AdcStreamP_readStreamDone_runTask();
   __CPROVER_ASYNC_1:

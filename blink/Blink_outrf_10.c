@@ -1,7 +1,7 @@
 #include "msp430_hw.h"
 //#include "lib/libc_string.h"
 
-int test; // Lihao
+//int test; // Lihao
 
 extern nondet_bv();
 
@@ -3428,6 +3428,6 @@ static void AlarmToTimerC_0_fired_runTask( void )
 
 static void VirtualizeTimerC_0_Timer_startPeriodic(uint8_t num, uint32_t dt) 
 {
-  bool oneshot; // = FALSE;
+  bool oneshot; // = FALSE; //Peter
   VirtualizeTimerC_0_startTimer(num, VirtualizeTimerC_0_TimerFrom_getNow(), dt, oneshot);
 }
