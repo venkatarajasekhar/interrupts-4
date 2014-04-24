@@ -3333,11 +3333,9 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
   for(num = 0; num < VirtualizeTimerC_0_NUM_TIMERS; num++)
   {
     VirtualizeTimerC_0_Timer_t *timer = &VirtualizeTimerC_0_m_timers[num];
-    bool isrunning = timer->isrunning;
-    if(isrunning)
+    if(timer->isrunning)
     {
-      timer->isrunning = TRUE; //Peter: this will cause the bug
-      test = 1; // Lihao
+      //test = 1; // Lihao
       uint32_t elapsed = now - timer->t0;
       int32_t remaining = timer->dt - elapsed;
       if(remaining < min_remaining)
@@ -3347,6 +3345,7 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
         //test = 0; // Lihao
       }
     }
+    timer->isrunning = TRUE; //Peter: this will cause the bug
   }
 
   // Lihao: unwind loop VirtualizeTimerC_0_NUM_TIMERS+1 times to reach here
@@ -3374,7 +3373,7 @@ static void VirtualizeTimerC_0_fireTimers(uint32_t now)
     if(timer->isrunning)
     {
       uint32_t elapsed = now - timer->t0;
-      test = 0; assert(test == 0); // Lihao
+      //test = 0; assert(test == 0); // Lihao
       if(elapsed >= timer->dt)
       {
         if(timer->isoneshot)
