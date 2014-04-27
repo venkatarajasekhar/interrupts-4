@@ -3375,7 +3375,8 @@ static void VirtualizeTimerC_0_fireTimers(uint32_t now)
   for(num = 0; num < VirtualizeTimerC_0_NUM_TIMERS; num++)
   {
     VirtualizeTimerC_0_Timer_t *timer = &VirtualizeTimerC_0_m_timers[num];
-    if(timer->isrunning)
+    bool isrunning = timer->isrunning;
+    if(isrunning)
     {
       uint32_t elapsed = now - timer->t0;
       //test = 0; assert(test == 0); // Lihao
