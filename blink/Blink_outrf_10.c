@@ -3259,6 +3259,7 @@ void main(void) {
   AlarmToTimerC_0_fired_runTask(); 
   //VirtualizeTimerC_0_fireTimers(now);
   //TransformAlarmC_0_AlarmFrom_fired();
+  //__CPROVER_ASYNC_1:
   //sig_TIMERB0_VECTOR();
   __CPROVER_ASYNC_1:
   VirtualizeTimerC_0_updateFromTimer_runTask(); 
@@ -3333,9 +3334,12 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
   for(num = 0; num < VirtualizeTimerC_0_NUM_TIMERS; num++)
   {
     VirtualizeTimerC_0_Timer_t *timer = &VirtualizeTimerC_0_m_timers[num];
-    if(timer->isrunning)
+    bool isrunning = timer->isrunning;
+    if(isrunning)
     {
       //test = 1; // Lihao
+      // Lihao: this will not be reachable as isrunning is false 
+      //timer->isrunning = TRUE; //Peter: this will cause the bug
       uint32_t elapsed = now - timer->t0;
       int32_t remaining = timer->dt - elapsed;
       if(remaining < min_remaining)
@@ -3345,6 +3349,7 @@ static void VirtualizeTimerC_0_updateFromTimer_runTask( void )
         //test = 0; // Lihao
       }
     }
+    // Lihao: now it is reachable
     timer->isrunning = TRUE; //Peter: this will cause the bug
   }
 
